@@ -1,0 +1,6 @@
+= mc
+
+Describe your project here
+
+:include:mc.rdoc
+
