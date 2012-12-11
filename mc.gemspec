@@ -2,12 +2,12 @@
 require File.join([File.dirname(__FILE__),'lib','mc','version.rb'])
 spec = Gem::Specification.new do |s| 
   s.name = 'mc'
-  s.version = Mc::VERSION
-  s.author = 'Your Name Here'
-  s.email = 'your@email.address.com'
-  s.homepage = 'http://your.website.com'
+  s.version = MC::VERSION
+  s.author = 'Kale Davis'
+  s.email = 'kale@kaledavis.com'
+  s.homepage = 'http://www.kaledavis.com'
   s.platform = Gem::Platform::RUBY
-  s.summary = 'A description of your project'
+  s.summary = 'Command line interface to MailChimp. Eep eep!'
 # Add your other files here if you make them
   s.files = %w(
 bin/mc
