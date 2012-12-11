@@ -1,4 +1,6 @@
-require 'mc/version.rb'
+require 'rubygems'
+require 'gli'
 
-# Add requires for other files you add to your project here, so
-# you just need to require this one file in your bin file
+require 'mc/version'
+require 'mc/mailchimp'
+require 'mc/commands'

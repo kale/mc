@@ -23,6 +23,18 @@ flag [:default_list]
 commands_from "mc/commands"
 
 pre do |global,command,options,args|
+  if global[:apikey].nil?
+    raise "Must include MailChimp API key either via --apikey flag or config file."
+  else
+    @mailchimp = MailChimp.new(global[:apikey], global[:resetcache])
+  end
+
+  if global[:debug]
+  	@debug = true
+  else
+  	@debug = false
+  end
+
   true
 end
 
@@ -30,9 +42,9 @@ post do |global,command,options,args|
 end
 
 on_error do |exception|
-	exception.message
-	exception.display
-	if true then
+	puts exception.message
+
+	if @debug then
 		puts "\n"+"-"*20+"[ Backtrace: ]"+"-"*20
 		exception.backtrace.each do |b|
 			puts b

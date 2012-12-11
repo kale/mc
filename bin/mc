@@ -1,7 +1,4 @@
 #!/usr/bin/env ruby
-require 'rubygems'
-require 'gli'
 require 'mc'
-require 'mc/commands'
 
 run(ARGV)
