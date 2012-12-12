@@ -1,0 +1,353 @@
+Campaign  Related Methods 
+========================
+
+campaignContent(string apikey, string cid, bool for_archive)
+Get the content (both html and text) for a campaign either as it would appear in the campaign archive or as the raw, original content
+
+campaignCreate(string apikey, string type, array options, array content, array segment_opts, array type_opts)
+Create a new draft campaign to send. 
+
+campaignDelete(string apikey, string cid)
+Delete a campaign. 
+
+campaignEcommOrderAdd(string apikey, array order)
+Attach Ecommerce Order Information to a Campaign. 
+
+campaignPause(string apikey, string cid)
+Pause an AutoResponder or RSS campaign from sending
+
+campaignReplicate(string apikey, string cid)
+Replicate a campaign.
+
+campaignResume(string apikey, string cid)
+Resume sending an AutoResponder or RSS campaign
+
+campaignSchedule(string apikey, string cid, string schedule_time, string schedule_time_b)
+Schedule a campaign to be sent in the future
+
+campaignScheduleBatch(string apikey, string cid, string schedule_time, int num_batches, int stagger_mins)
+Schedule a campaign to be sent in batches sometime in the future. 
+
+campaignSegmentTest(string apikey, string list_id, array options)
+Allows one to test their segmentation rules before creating a campaign using them
+
+campaignSendNow(string apikey, string cid)
+Send a given campaign immediately. 
+
+campaignSendTest(string apikey, string cid, array test_emails, string send_type)
+Send a test of this campaign to the provided email address
+
+campaignShareReport(string apikey, string cid, array opts)
+Get the URL to a customized <a href="http://eepurl.com/gKmL" target="_blank">VIP Report for the specified campaign and optionally send an email to someone with links to it. 
+
+campaignTemplateContent(string apikey, string cid)
+Get the HTML template content sections for a campaign. 
+
+campaignUnschedule(string apikey, string cid)
+Unschedule a campaign that is scheduled to be sent in the future
+
+campaignUpdate(string apikey, string cid, string name, mixed value)
+ been sent. 
+
+campaigns(string apikey, array filters, int start, int limit)
+Get the list of campaigns and their details matching the specified filters
+
+
+Campaign  Stats Methods 
+========================
+
+campaignAbuseReports(string apikey, string cid, string since, int start, int limit)
+Get all email addresses that complained about a given campaign
+
+campaignAdvice(string apikey, string cid)
+Retrieve the text presented in our app for how a campaign performed and any advice we may have for you - best
+suited for display in customized reports pages. 
+
+campaignAnalytics(string apikey, string cid)
+Retrieve the Google Analytics data we've collected for this campaign. 
+
+campaignBounceMessage(string apikey, string cid, string email)
+Retrieve the most recent full bounce message for a specific email address on the given campaign. 
+
+campaignBounceMessages(string apikey, string cid, int start, int limit, string since)
+Retrieve the full bounce messages for the given campaign. 
+
+campaignClickStats(string apikey, string cid)
+Get an array of the urls being tracked, and their click counts for a given campaign
+
+campaignEcommOrders(string apikey, string cid, int start, int limit, string since)
+Retrieve the Ecommerce Orders tracked by campaignEcommOrderAdd()
+
+campaignEepUrlStats(string apikey, string cid)
+Retrieve the tracked eepurl mentions on Twitter
+
+campaignEmailDomainPerformance(string apikey, string cid)
+Get the top 5 performing email domains for this campaign. 
+
+campaignGeoOpens(string apikey, string cid)
+Retrieve the countries and number of opens tracked for each. 
+
+campaignGeoOpensForCountry(string apikey, string cid, string code)
+Retrieve the regions and number of opens tracked for a certain country. 
+
+campaignHardBounces(string apikey, string cid, int start, int limit)
+<strong>DEPRECATED</strong> Get all email addresses with Hard Bounces for a given campaign
+
+campaignMembers(string apikey, string cid, string status, int start, int limit)
+Get all email addresses the campaign was successfully sent to (ie, no bounces)
+
+campaignSoftBounces(string apikey, string cid, int start, int limit)
+<strong>DEPRECATED</strong> Get all email addresses with Soft Bounces for a given campaign
+
+campaignStats(string apikey, string cid)
+Given a list and a campaign, get all the relevant campaign statistics (opens, bounces, clicks, etc.)
+
+campaignUnsubscribes(string apikey, string cid, int start, int limit)
+Get all unsubscribed email addresses for a given campaign
+
+
+Campaign Report Data Methods 
+========================
+
+campaignClickDetailAIM(string apikey, string cid, string url, int start, int limit)
+Return the list of email addresses that clicked on a given url, and how many times they clicked
+
+campaignEmailStatsAIM(string apikey, string cid, array email_address)
+Given a campaign and email address, return the entire click and open history with timestamps, ordered by time
+
+campaignEmailStatsAIMAll(string apikey, string cid, int start, int limit)
+Given a campaign and correct paging limits, return the entire click and open history with timestamps, ordered by time, 
+for every user a campaign was delivered to.
+
+campaignNotOpenedAIM(string apikey, string cid, int start, int limit)
+Retrieve the list of email addresses that did not open a given campaign
+
+campaignOpenedAIM(string apikey, string cid, int start, int limit)
+Retrieve the list of email addresses that opened a given campaign with how many times they opened - note: this AIM function is free and does
+not actually require the AIM module to be installed
+
+
+Ecommerce Methods 
+========================
+
+ecommOrderAdd(string apikey, array order)
+Import Ecommerce Order Information to be used for Segmentation. 
+
+ecommOrderDel(string apikey, string store_id, string order_id)
+Delete Ecommerce Order Information used for segmentation. 
+
+ecommOrders(string apikey, int start, int limit, string since)
+Retrieve the Ecommerce Orders for an account
+
+
+Folder  Related Methods 
+========================
+
+folderAdd(string apikey, string name, string type)
+Add a new folder to file campaigns or autoresponders in
+
+folderDel(string apikey, int fid, string type)
+Delete a campaign or autoresponder folder. 
+
+folderUpdate(string apikey, int fid, string name, string type)
+Update the name of a folder for campaigns or autoresponders
+
+folders(string apikey, string type)
+List all the folders for a user account
+
+
+Golden Monkeys Methods 
+========================
+
+gmonkeyActivity(string apikey)
+Retrieve all Activity (opens/clicks) for Golden Monkeys over the past 10 days
+
+gmonkeyAdd(string apikey, string id, array email_address)
+Add Golden Monkey(s)
+
+gmonkeyDel(string apikey, string id, array email_address)
+Remove Golden Monkey(s)
+
+gmonkeyMembers(string apikey)
+Retrieve all Golden Monkey(s) for an account
+
+
+Helper Methods 
+========================
+
+campaignsForEmail(string apikey, string email_address, array options)
+Retrieve all Campaigns Ids a member was sent
+
+chimpChatter(string apikey)
+Return the current Chimp Chatter messages for an account.
+
+generateText(string apikey, string type, mixed content)
+Have HTML content auto-converted to a text-only format. 
+
+getAccountDetails(string apikey, array exclude)
+Retrieve lots of account information including payments made, plan info, some account stats, installed modules,
+contact info, and more. 
+
+getVerifiedDomains(string apikey)
+Retrieve all domains verification records for an account
+
+inlineCss(string apikey, string html, bool strip_css)
+Send your HTML content to have the CSS inlined and optionally remove the original styles.
+
+listsForEmail(string apikey, string email_address)
+Retrieve all List Ids a member is subscribed to.
+
+ping(string apikey)
+"Ping" the MailChimp API - a simple method you can call that will return a constant value as long as everything is good. 
+
+searchCampaigns(string apikey, string query, int offset, string snip_start, string snip_end)
+Search all campaigns for the specified query terms
+
+searchMembers(string apikey, string query, string id, int offset)
+Search account wide or on a specific list using the specified query terms
+
+
+List Related Methods 
+========================
+
+listAbuseReports(string apikey, string id, int start, int limit, string since)
+Get all email addresses that complained about a given campaign
+
+listActivity(string apikey, string id)
+Access up to the previous 180 days of daily detailed aggregated activity stats for a given list
+
+listBatchSubscribe(string apikey, string id, array batch, boolean double_optin, boolean update_existing, boolean replace_interests)
+Subscribe a batch of email addresses to a list at once. 
+
+listBatchUnsubscribe(string apikey, string id, array emails, boolean delete_member, boolean send_goodbye, boolean send_notify)
+Unsubscribe a batch of email addresses to a list
+
+listClients(string apikey, string id)
+Retrieve the clients that the list's subscribers have been tagged as being used based on user agents seen. 
+
+listGrowthHistory(string apikey, string id)
+Access the Growth History by Month for a given list.
+
+listInterestGroupAdd(string apikey, string id, string group_name, int grouping_id)
+Add a single Interest Group - if interest groups for the List are not yet enabled, adding the first
+ group will automatically turn them on.
+
+listInterestGroupDel(string apikey, string id, string group_name, int grouping_id)
+Delete a single Interest Group - if the last group for a list is deleted, this will also turn groups for the list off.
+
+listInterestGroupUpdate(string apikey, string id, string old_name, string new_name, int grouping_id)
+Change the name of an Interest Group
+
+listInterestGroupingAdd(string apikey, string id, string name, string type, array groups)
+Add a new Interest Grouping - if interest groups for the List are not yet enabled, adding the first
+ grouping will automatically turn them on.
+
+listInterestGroupingDel(string apikey, int grouping_id)
+Delete an existing Interest Grouping - this will permanently delete all contained interest groups and will remove those selections from all list members
+
+listInterestGroupingUpdate(string apikey, int grouping_id, string name, string value)
+Update an existing Interest Grouping
+
+listInterestGroupings(string apikey, string id)
+Get the list of interest groupings for a given list, including the label, form information, and included groups for each
+
+listLocations(string apikey, string id)
+Retrieve the locations (countries) that the list's subscribers have been tagged to based on geocoding their IP address
+
+listMemberActivity(string apikey, string id, array email_address)
+Get the most recent 100 activities for particular list members (open, click, bounce, unsub, abuse, sent to)
+
+listMemberInfo(string apikey, string id, array email_address)
+Get all the information for particular members of a list
+
+listMembers(string apikey, string id, string status, string since, int start, int limit, string sort_dir)
+Get all of the list members for a list that are of a particular status. 
+
+listMergeVarAdd(string apikey, string id, string tag, string name, array options)
+Add a new merge tag to a given list
+
+listMergeVarDel(string apikey, string id, string tag)
+Delete a merge tag from a given list and all its members. 
+
+listMergeVarReset(string apikey, string id, string tag)
+Completely resets all data stored in a merge var on a list. 
+
+listMergeVarUpdate(string apikey, string id, string tag, array options)
+Update most parameters for a merge tag on a given list. 
+
+listMergeVars(string apikey, string id)
+Get the list of merge tags for a given list, including their name, tag, and required setting
+
+listStaticSegmentAdd(string apikey, string id, string name)
+Save a segment against a list for later use. 
+
+listStaticSegmentDel(string apikey, string id, int seg_id)
+Delete a static segment. 
+
+listStaticSegmentMembersAdd(string apikey, string id, int seg_id, array batch)
+Add list members to a static segment. 
+
+listStaticSegmentMembersDel(string apikey, string id, int seg_id, array batch)
+Remove list members from a static segment. 
+
+listStaticSegmentReset(string apikey, string id, int seg_id)
+ members from the static segment. 
+
+listStaticSegments(string apikey, string id)
+Retrieve all of the Static Segments for a list.
+
+listSubscribe(string apikey, string id, string email_address, array merge_vars, string email_type, bool double_optin, bool update_existing, bool replace_interests, bool send_welcome)
+Subscribe the provided email to a list. 
+
+listUnsubscribe(string apikey, string id, string email_address, boolean delete_member, boolean send_goodbye, boolean send_notify)
+Unsubscribe the given email address from the list
+
+listUpdateMember(string apikey, string id, string email_address, array merge_vars, string email_type, boolean replace_interests)
+Edit the email address, merge fields, and interest groups for a list member. 
+
+listWebhookAdd(string apikey, string id, string url, array actions, array sources)
+Add a new Webhook URL for the given list
+
+listWebhookDel(string apikey, string id, string url)
+Delete an existing Webhook URL from a given list
+
+listWebhooks(string apikey, string id)
+Return the Webhooks configured for the given list
+
+lists(string apikey, array filters, int start, int limit, string sort_field, string sort_dir)
+Retrieve all of the lists defined for your user account
+
+
+Security Related Methods 
+========================
+
+apikeyAdd(string username, string password, string apikey)
+Add an API Key to your account. 
+
+apikeyExpire(string username, string password, string apikey)
+Expire a Specific API Key. 
+
+apikeys(string username, string password, string apikey, boolean expired)
+Retrieve a list of all MailChimp API Keys for this User
+
+
+Template  Related Methods 
+========================
+
+templateAdd(string apikey, string name, string html)
+Create a new user template, <strong>NOT</strong> campaign content. 
+
+templateDel(string apikey, int id)
+Delete (deactivate) a user template
+
+templateInfo(string apikey, int tid, string type)
+Pull details for a specific template to help support editing
+
+templateUndel(string apikey, int id)
+Undelete (reactivate) a user template
+
+templateUpdate(string apikey, int id, array values)
+Replace the content of a user template, <strong>NOT</strong> campaign content.
+
+templates(string apikey, array types, array inactives, string category)
+Retrieve various templates available in the system, allowing some thing similar to our template gallery to be created.
