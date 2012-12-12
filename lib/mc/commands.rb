@@ -1,4 +1,3 @@
-require_relative 'helper'
 include GLI::App
 include Helper
 

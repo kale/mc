@@ -1,6 +1,6 @@
 require 'minitest/spec'
 require 'minitest/autorun'
-require 'rubygems'
+require 'yaml'
 require 'mc'
 
 describe "MC" do
