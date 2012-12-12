@@ -8,16 +8,18 @@ class MailChimp
     @options = options
   end
 
-  def method_missing (method_name, *args)  
-    puts "method missing: '#{method_name}' - #{args}" if @options[:debug]
-    @api.send(method_name, *args)
-  end
-
   def ping
     if @api.ping == "Everything's Chimpy!"
     	"Everything's Chimpy!"
     else
     	"Yikes, can't connect!"
     end
+  end
+
+  private
+
+  def method_missing (method_name, *args)  
+    puts "method missing: '#{method_name}' - #{args}" if @options[:debug]
+    @api.send(method_name, *args)
   end
 end

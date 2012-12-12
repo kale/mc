@@ -15,4 +15,8 @@ describe "MC" do
   it "should be able to ping MailChimp" do
     @mailchimp.ping.must_equal "Everything's Chimpy!"
   end
+
+  it "should pass to method_missing" do
+  	@mailchimp.lists.count.must_be :>, 0
+  end
 end
