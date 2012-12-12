@@ -1,4 +1,6 @@
+require_relative 'helper'
 include GLI::App
+include Helper
 
 program_desc 'Command line interface to MailChimp. Eep eep!'
 
@@ -26,11 +28,12 @@ pre do |global,command,options,args|
   if global[:apikey].nil?
     raise "Must include MailChimp API key either via --apikey flag or config file."
   else
-    @mailchimp = MailChimp.new(global[:apikey], global[:resetcache])
+    @mailchimp = MailChimp.new(global[:apikey], {:debug => global[:debug], :reset_cache => global[:resetcache]})
   end
 
   if global[:debug]
   	@debug = true
+  	puts "DEBUG ON"
   else
   	@debug = false
   end

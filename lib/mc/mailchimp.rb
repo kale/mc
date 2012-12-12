@@ -1,10 +1,16 @@
 require 'gibbon'
 
 class MailChimp
-  def initialize(apikey, reset_cache=false)
+  def initialize(apikey, options={})
   	#setup Gibbon
     @api = Gibbon.new(apikey)
     @api.throws_exceptions = true
+    @options = options
+  end
+
+  def method_missing (method_name, *args)  
+    puts "method missing: '#{method_name}' - #{args}" if @options[:debug]
+    @api.send(method_name, *args)
   end
 
   def ping
