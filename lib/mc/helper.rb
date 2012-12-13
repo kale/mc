@@ -1,4 +1,14 @@
 module Helper
+  def get_required_argument(name, option, global)
+    return option unless option.nil?
+    return global unless global.nil?
+    help_now!("--#{name.to_s} is required")
+  end
+
+  def not_implemented
+    exit
+  end
+    
   def cli_print(input, fields=nil, options={})
     # set default options
     options[:show_header] ||= true
@@ -6,11 +16,17 @@ module Helper
     options[:debug]       ||= false
 
     # find the correct staring level in the returned json
-    if input.class == Hash
+    if input.kind_of? Hash
       input = input["data"] unless input["data"].nil?
     end
+    
+    if fields == :all
+      fields = []
+      input.first.each_key {|key| fields << key}
+    end
 
-    puts "Fields: #{fields.join(', ')}" unless fields.nil? || !options[:show_header]
+
+    puts "Fields: #{[*fields].join(', ')}" unless fields.nil? || !options[:show_header]
 
     input.to_enum.with_index(1) do |item, index|
       if options[:debug] || fields.nil?
@@ -20,7 +36,7 @@ module Helper
         return
       else
         values_to_print = []
-        fields.each do |field|
+        [*fields].each do |field|
           if field.class == Hash
             values_to_print << item[field.keys.first.to_s][field.values.first.to_s]
           else
