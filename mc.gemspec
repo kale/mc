@@ -9,17 +9,14 @@ spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.summary = 'Command line interface to MailChimp. Eep eep!'
 # Add your other files here if you make them
-  s.files = %w(
-bin/mc
-lib/mc/version.rb
-lib/mc.rb
-  )
+  s.files = `git ls-files`.split("\n")
+  s.test_files = `git ls-files -- {test,features}/*`.split("\n")
   s.require_paths << 'lib'
   s.has_rdoc = true
   s.extra_rdoc_files = ['README.rdoc','mc.rdoc']
   s.rdoc_options << '--title' << 'mc' << '--main' << 'README.rdoc' << '-ri'
   s.bindir = 'bin'
-  s.executables << 'mc'
+  s.executables = 'mc'
   s.add_development_dependency('rake')
   s.add_development_dependency('rdoc')
   s.add_development_dependency('aruba')
