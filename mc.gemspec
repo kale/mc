@@ -1,4 +1,3 @@
-# Ensure we require the local version and not one we might have installed already
 require File.join([File.dirname(__FILE__),'lib','mc','version.rb'])
 spec = Gem::Specification.new do |s| 
   s.name = 'mc'
@@ -8,7 +7,6 @@ spec = Gem::Specification.new do |s|
   s.homepage = 'http://www.kaledavis.com'
   s.platform = Gem::Platform::RUBY
   s.summary = 'Command line interface to MailChimp. Eep eep!'
-# Add your other files here if you make them
   s.files = `git ls-files`.split("\n")
   s.test_files = `git ls-files -- {test,features}/*`.split("\n")
   s.require_paths << 'lib'
@@ -21,4 +19,6 @@ spec = Gem::Specification.new do |s|
   s.add_development_dependency('rdoc')
   s.add_development_dependency('aruba')
   s.add_runtime_dependency('gli','2.5.1')
+  s.add_runtime_dependency('gibbon','0.4.2')
+  s.add_runtime_dependency('filecache','1.0.0')
 end
