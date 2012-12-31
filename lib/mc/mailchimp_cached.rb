@@ -4,17 +4,17 @@ require 'digest/sha1'
 
 class MailChimpCached < MailChimp
 
-	def initialize(apikey, options={})
-		super(apikey, options)
+  def initialize(apikey, options={})
+    super(apikey, options)
 
-		# configure filecache
-		cache_dir = File.join(File.expand_path(ENV['HOME']), ".mailchimp-cache")
-		
-		# expire in one hour
-		expiry = 60 * 60
+    # configure filecache
+    cache_dir = File.join(File.expand_path(ENV['HOME']), ".mailchimp-cache")
 
-		@cache = FileCache.new(apikey, cache_dir, expiry)
-	end
+    # expire in one hour
+    expiry = 60 * 60
+
+    @cache = FileCache.new(apikey, cache_dir, expiry)
+  end
 
   private
 
@@ -24,11 +24,11 @@ class MailChimpCached < MailChimp
     cache_key = Digest::SHA1.hexdigest(method_name.to_s + args.to_s)
 
     if result = @cache.get(cache_key)
-    	return result
+      return result
     else
-    	#result = @api.send(method_name, *args)
-    	@cache.set(cache_key, result)
-    	return result
+      result = @api.send(method_name, *args)
+      @cache.set(cache_key, result)
+      return result
     end
   end
 end
