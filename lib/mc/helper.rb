@@ -8,11 +8,20 @@ module Helper
   def not_implemented
     exit
   end
-    
+
+  def view_to_print(global, fields, print_options=nil)
+    if global[:raw]
+      # only show the first field and nothing else
+      return fields.first, {:show_index => false}
+    else
+      return fields, print_options
+    end
+  end
+
   def cli_print(input, fields=nil, options={})
     # set default options
     options[:show_header] ||= true
-    options[:show_index]  ||= true
+    options[:show_index]  ||= false
     options[:debug]       ||= false
 
     # find the correct staring level in the returned json
@@ -25,6 +34,7 @@ module Helper
       input.first.each_key {|key| fields << key}
     end
 
+    input.reverse! if options[:reverse]
 
     puts "Fields: #{[*fields].join(', ')}" unless fields.nil? || !options[:show_header]
 

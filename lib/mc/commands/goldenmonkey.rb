@@ -10,7 +10,7 @@ command [:goldenmonkey, :gm] do |c|
   c.desc 'Show all Activity (opens/clicks) for Golden Monkeys over the past 10 days'
   c.command :activity do |s|
     s.action do
-      cli_print @mailchimp.gmonkey_activity, [:email, :action, :title, :timestamp]
+      cli_print @mailchimp.gmonkey_activity, [:email, :action, :title, :timestamp], :reverse => true
     end
   end
 
