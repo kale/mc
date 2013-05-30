@@ -79,10 +79,12 @@ command :campaign do |c|
     c.switch [:sendtest]    
 
     s.action do |global,options,args|
-      field, value = options[:seg_options].split(",") if options[:seg_options]
+      if options[:seg_options]
+        field, value = options[:seg_options].split(",") if options[:seg_options]
+        options[:seg_options] = [{:field => field, :op => "like", :value => value}]
+      end
 
-      @campaign_id = @mailchimp.campaign_create(options[:listid], options[:subject], options[:html_filename], options[:text_filename], [{:field => field, :op => "like", :value => value}])
-      puts "Campaign created: #{@campaign_id}"
+      puts "Campaign created: #{@mailchimp.campaign_create(options, options[:seg_options])}"
     end
   end
 
@@ -92,7 +94,7 @@ command :campaign do |c|
       campaign_id = options[:cid] || @mailchimp.cache.get(:campaign_id)
       throw "Need a valid Campaign ID." if campaign_id.nil?
 
-      puts @mailchimp.campaign_send_now({:cid => campaign_id})
+      puts @mailchimp.campaign_send_now(:cid => campaign_id)
     end
   end
 
@@ -100,7 +102,8 @@ command :campaign do |c|
   c.command :schedule do |s|
     s.action do |global,options,args|
       campaign_id = options[:cid] || @campaign_id
-      puts @mailchimp.campaign_schedule(campaign_id, "2012-10-24 08:15:00")
+      #TODO: fix this
+      puts @mailchimp.campaign_schedule(:cid => campaign_id, :schedule_time => "2012-10-24 08:15:00")
     end
   end
 
@@ -111,7 +114,18 @@ command :campaign do |c|
       throw "Need a valid Campaign ID." if campaign_id.nil?
 
       puts "Sending test for campaign #{campaign_id}..."
-      puts @mailchimp.campaign_send_test(campaign_id, ["kale.davis@gmail.com", "kale@simplerise.com"])
+      puts @mailchimp.campaign_send_test(:cid=> campaign_id, :test_emails => ["kale.davis@gmail.com", "kale@simplerise.com"])
+    end
+  end  
+
+  c.desc 'Delete Campaign'
+  c.command :delete do |s|
+    s.action do |global,options,args|
+      campaign_id = options[:cid] || @mailchimp.cache.get(:campaign_id)
+      throw "Need a valid Campaign ID." if campaign_id.nil?
+
+      campaign_delete(:cid=> campaign_id)
+      puts "Deleted campaign #{campaign_id}."
     end
   end  
 end
