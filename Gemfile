@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 gemspec
 
-gem "gibbon"
-gem "filecache"
-gem "webmock"
+gem 'gli', '>=2.7'
+gem 'gibbon'
+gem 'filecache'
+gem 'webmock'
