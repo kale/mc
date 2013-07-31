@@ -44,13 +44,13 @@ post do |global,command,options,args|
 end
 
 on_error do |exception|
-	puts exception.message
+  puts exception.message
 
-	if @debug then
-		puts "\n"+"-"*20+"[ Backtrace: ]"+"-"*20
-		exception.backtrace.each do |b|
-			puts b
-		end
-	end
-	false
+  if @debug then
+    puts "\n"+"-"*20+"[ Backtrace: ]"+"-"*20
+    exception.backtrace.each do |b|
+      puts b
+    end
+  end
+  false
 end
