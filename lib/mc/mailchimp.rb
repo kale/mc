@@ -3,17 +3,16 @@ require 'filecache'
 
 class MailChimp
   def initialize(apikey, options={})
-  	#setup Gibbon
-    @api = Gibbon.new(apikey)
+    @api = Gibbon::API.new(apikey)
     @api.throws_exceptions = true
     @options = options
   end
 
   def ping
-    if @api.ping == "Everything's Chimpy!"
-    	"Everything's Chimpy!"
+    if @api.helper.ping['msg'] == "Everything's Chimpy!"
+      "Everything's Chimpy!"
     else
-    	"Yikes, can't connect!"
+      "Yikes, can't connect!"
     end
   end
 
@@ -41,6 +40,8 @@ class MailChimp
   private
 
   def method_missing (method_name, *args)  
-    @api.send(method_name, *args)
+    category = method_name.to_s.split('_').first
+    method   = method_name.to_s.split('_')[1..-1].join('_')
+    @api.send(category).send(method, *args)
   end
 end

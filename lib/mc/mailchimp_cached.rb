@@ -27,9 +27,12 @@ class MailChimpCached < MailChimp
     cache_key = Digest::SHA1.hexdigest(method_name.to_s + args.to_s)
 
     if result = @cache.get(cache_key) and not @reset
+      puts "*** CACHED RESULT ***" if @options[:debug]
       return result
     else
-      result = @api.send(method_name, *args)
+      category = method_name.to_s.split('_').first
+      method   = method_name.to_s.split('_')[1..-1].join('_')
+      result = @api.send(category).send(method, *args)
       @cache.set(cache_key, result)
       return result
     end

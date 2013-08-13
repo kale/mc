@@ -23,10 +23,11 @@ command :helper do |c|
     end
   end
 
-  c.desc 'See the current Chimp Chatter messages.'
-  c.command :chatter do |s|
+  # helper/verified-domains (string apikey)
+  c.desc 'Ping MailChimp to make sure all is okay.'
+  c.command :ping do |s|
     s.action do |global,options,args|
-      cli_print @mailchimp.chimp_chatter, :message
+      puts @mailchimp.ping
     end
-  end    
+  end
 end

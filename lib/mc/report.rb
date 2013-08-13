@@ -107,7 +107,7 @@ module Report
     def load_campaigns
       campaigns = []
 
-      @api.campaigns(:filters => {:list_id => @list_id}, :limit => 100)['data'].each do |campaign|
+      @api.campaigns_list(:filters => {:list_id => @list_id}, :limit => 100)['data'].each do |campaign|
         if campaign['send_time'] != nil && campaign['send_time'].match(/#{@year.to_s}/)
           campaigns << campaign
         end
