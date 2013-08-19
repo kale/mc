@@ -6,6 +6,12 @@ class MailChimp
     @api = Gibbon::API.new(apikey)
     @api.throws_exceptions = true
     @options = options
+
+  end
+
+  def export_list(id)
+    @exporter = @api.get_exporter
+    @exporter.list({:id => id})
   end
 
   def ping
@@ -39,7 +45,7 @@ class MailChimp
 
   private
 
-  def method_missing (method_name, *args)  
+  def method_missing(method_name, *args)  
     category = method_name.to_s.split('_').first
     method   = method_name.to_s.split('_')[1..-1].join('_')
     @api.send(category).send(method, *args)

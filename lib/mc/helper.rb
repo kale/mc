@@ -5,6 +5,15 @@ module Helper
     help_now!("--#{name.to_s} is required")
   end
 
+  def create_email_struct(emails)
+    struct = []
+    emails.split(',').each do |email|
+      struct << {:email => email}
+    end
+
+    return struct
+  end
+
   def not_implemented
     exit
   end
@@ -26,9 +35,14 @@ module Helper
 
     # find the correct staring level in the returned json
     if input.kind_of? Hash
-      input = input["data"] unless input["data"].nil?
+      # array of hashes or just a single hash?
+      if input["data"].nil?
+        input = [input]
+      else
+        input = input["data"]
+      end
     end
-    
+
     if fields == :all
       fields = []
       input.first.each_key {|key| fields << key}
@@ -42,7 +56,27 @@ module Helper
       if options[:debug] || fields.nil?
         puts "Number of items: #{input.count}"
         puts "Fields:"
-        item.each {|k,v| puts "#{k} = #{v}"}
+        item.each do |k,v|
+          if v.kind_of? Hash
+            puts "#{k} ="
+            v.each do |k,v|
+              puts "     #{k} = #{v}"
+            end
+          elsif v.kind_of? Array
+            puts "#{k} ="
+            v.each do |i|
+              if i.kind_of? Hash
+                i.each do |k,v|
+                  puts "     #{k} = #{v}"
+                end
+              else
+                puts "     #{i}"
+              end
+            end
+          else
+            puts "#{k} = #{v}"
+          end
+        end
         return
       else
         values_to_print = []

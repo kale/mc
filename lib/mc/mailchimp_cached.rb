@@ -23,7 +23,7 @@ class MailChimpCached < MailChimp
 
   private
 
-  def method_missing (method_name, *args)
+  def method_missing(method_name, *args)
     cache_key = Digest::SHA1.hexdigest(method_name.to_s + args.to_s)
 
     if result = @cache.get(cache_key) and not @reset
