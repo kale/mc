@@ -24,18 +24,18 @@ flag [:default_list]
 commands_from "mc/commands"
 
 pre do |global,command,options,args|
-  if global[:apikey].nil?
-    raise "Must include MailChimp API key either via --apikey flag or config file."
-  else
-    @mailchimp = MailChimp.new(global[:apikey], {:debug => global[:debug], :reset_cache => global[:resetcache]})
-  end
+  # quit if no api
+  raise "Must include MailChimp API key either via --apikey flag or config file." if global[:apikey].nil?
+  
+  # setup mailchimp api
+  @mailchimp = MailChimp.new(global[:apikey], {:debug => global[:debug]})
+  @mailchimp_cached = MailChimpCached.new(global[:apikey], {:debug => global[:debug], :reset_cache => global[:resetcache]})
 
-  if global[:debug]
-  	@debug = true
-  	puts "DEBUG ON"
-  else
-  	@debug = false
-  end
+  # create cli writer
+  @output = CommandLineWriter.new(:debug => global[:debug], :reset_cache => global[:resetcache])
+
+  # setup debug
+  @debug = true if global[:debug]
 
   true
 end

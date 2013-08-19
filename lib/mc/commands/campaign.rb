@@ -128,4 +128,16 @@ command :campaign do |c|
       puts "Deleted campaign #{campaign_id}."
     end
   end  
+
+  c.desc 'Get the list of campaigns and their details matching the specified filters'
+  c.command :list do |s|
+    s.switch :first
+    s.action do |global,options,args|
+      if options[:first]
+        puts @mailchimp_cached.campaigns_list["data"].first
+      else
+        cli_print @mailchimp_cached.campaigns_list, :all
+      end
+    end
+  end
 end
