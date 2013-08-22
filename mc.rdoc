@@ -1,5 +1,0 @@
-= mc
-
-Generate this with
-    mc rdoc
-After you have described your command line interface
