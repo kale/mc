@@ -1,3 +1,5 @@
+require 'awesome_print'
+
 class CommandLineWriter
   def initialize(*options)
     @options = options.first
@@ -8,6 +10,15 @@ class CommandLineWriter
     puts "#{'*'*50}"
     puts output
     puts "#{'*'*50}"
+  end
+
+  def awesome(output)
+    ap output
+  end
+
+  def results(output, *options)
+  rescue
+    puts "AHHHH"
   end
 
   def search_results(output)
@@ -26,6 +37,9 @@ class CommandLineWriter
         show_member member
       end
     end
+
+    rescue 
+      puts output
   end
 
   private
