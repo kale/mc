@@ -7,7 +7,7 @@ require_relative 'test_helper'
 describe "MailChimp" do
   before do
     @mailchimp = MailChimp.new(config[:apikey])
-    @test_list_id = "ef4227fc80"
+    @test_list_id = config[:test_list_id]
   end
 
   it "should be able to ping MailChimp" do
@@ -36,30 +36,30 @@ end
 
 describe "MailChimpCached" do
   before do
-    @mailchimp = MailChimpCached.new(config[:apikey])
-    @test_list_id = "ef4227fc80"
+    @mailchimp_cached = MailChimpCached.new(config[:apikey])
+    @test_list_id = config[:test_list_id]
     clear_cached_dir
   end
 
   it "should not have a cached dir already" do
-  	@mailchimp.lists_list.count
+  	@mailchimp_cached.lists_list.count
  	File.exists?(cached_dir).must_equal true
     clear_cached_dir
  	File.exists?(cached_dir).must_equal false
   end
 
   it "should be able to ping MailChimp" do
-    @mailchimp.helper_ping['msg'].must_equal "Everything's Chimpy!"
+    @mailchimp_cached.helper_ping['msg'].must_equal "Everything's Chimpy!"
   end
 
   it "should pass to method_missing" do
-  	@mailchimp.lists_list.count.must_be :>, 0
+  	@mailchimp_cached.lists_list.count.must_be :>, 0
   end
 
   it "should create a cache dir" do
   	File.exists?(cached_dir).must_equal false
 
-  	@mailchimp.lists_list.count
+  	@mailchimp_cached.lists_list.count
 
   	File.exists?(cached_dir).must_equal true
   end
@@ -68,18 +68,18 @@ describe "MailChimpCached" do
     clear_cached_dir
     email = get_random_email_address
 
-    count = @mailchimp.lists_members(:id => @test_list_id)["total"].to_i
+    count = @mailchimp_cached.lists_members(:id => @test_list_id)["total"].to_i
     count.must_be :>=, 0
-    @mailchimp.lists_subscribe(:id => @test_list_id, :email => {:email => email}, :double_optin => false)
-    new_count = @mailchimp.lists_members(:id => @test_list_id)["total"].to_i
+    @mailchimp_cached.lists_subscribe(:id => @test_list_id, :email => {:email => email}, :double_optin => false)
+    new_count = @mailchimp_cached.lists_members(:id => @test_list_id)["total"].to_i
     new_count.must_equal count
     
     clear_cached_dir
 
-    new_count = @mailchimp.lists_members(:id => @test_list_id)["total"].to_i
+    new_count = @mailchimp_cached.lists_members(:id => @test_list_id)["total"].to_i
     new_count.must_equal count + 1
 
     # remove subscriber to reset list
-    @mailchimp.lists_unsubscribe(:id => @test_list_id, :email => {:email => email},:delete_member => true)
+    @mailchimp_cached.lists_unsubscribe(:id => @test_list_id, :email => {:email => email},:delete_member => true)
   end
 end
