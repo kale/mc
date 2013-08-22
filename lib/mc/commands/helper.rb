@@ -23,6 +23,14 @@ command :helper do |c|
       cli_print @mailchimp_cached.helper_account_details, :all, :debug => true, :show_header => false
     end
   end
+
+  # helper/campaigns-for-email (string apikey, struct email, struct options)
+  c.desc 'Retrieve minimal data for all Campaigns a member was sent'
+  c.command :campaigns_for_email do |s|
+    s.action do |global,options,args|
+      puts @mailchimp_cached.helper_camaigns_for_email options[:email]
+    end
+  end
   
   # helper/chimp-chatter (string apikey)
   c.desc 'See the current Chimp Chatter messages.'
@@ -32,14 +40,14 @@ command :helper do |c|
     end
   end    
 
-  c.desc 'Ping MailChimp to make sure all is okay.'
-  c.command :ping do |s|
+  # helper/lists-for-email (string apikey, struct email)
+  c.desc 'Retrieve minimal List data for all lists a member is subscribed to.'
+  c.command :lists_for_email do |s|
     s.action do |global,options,args|
-      puts @mailchimp.ping
+      cli_print @mailchimp_cached.helper_account_details, :all, :debug => true, :show_header => false
     end
   end
 
-  # helper/verified-domains (string apikey)
   c.desc 'Ping MailChimp to make sure all is okay.'
   c.command :ping do |s|
     s.action do |global,options,args|
