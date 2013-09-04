@@ -15,7 +15,7 @@ module Helper
   end
 
   def not_implemented
-    exit
+    raise "This command is not implemented yet."
   end
 
   def view_to_print(global, fields, print_options=nil)

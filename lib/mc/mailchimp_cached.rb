@@ -24,10 +24,11 @@ class MailChimpCached < MailChimp
   private
 
   def method_missing(method_name, *args)
+    puts "DEBUG: Calling '#{method_name}(#{args})'..." if @options[:debug]
     cache_key = Digest::SHA1.hexdigest(method_name.to_s + args.to_s)
 
     if result = @cache.get(cache_key) and not @reset
-      puts "*** CACHED RESULT ***" if @options[:debug]
+      puts "DEBUG: USING CACHED RESULT" if @options[:debug]
       return result
     else
       category = method_name.to_s.split('_').first

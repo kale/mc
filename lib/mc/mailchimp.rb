@@ -46,6 +46,7 @@ class MailChimp
   private
 
   def method_missing(method_name, *args)  
+    puts "DEBUG: Calling '#{method_name}(#{args})'..." if @options[:debug]
     category = method_name.to_s.split('_').first
     method   = method_name.to_s.split('_')[1..-1].join('_')
     @api.send(category).send(method, *args)
