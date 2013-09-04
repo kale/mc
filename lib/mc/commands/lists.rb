@@ -17,7 +17,8 @@ command :lists do |c|
   c.desc 'Retrieve all of the lists defined for your user account.'
   c.command :list do |s|
     s.action do |global,options,args|
-      cli_print @mailchimp_cached.lists_list, [:id, :name]#, view_to_print(global, [:id, :name, :list_rating, :stats => :member_count], {:show_header => true})
+      #cli_print @mailchimp_cached.lists_list, [:id, :name]#, view_to_print(global, [:id, :name, :list_rating, :stats => :member_count], {:show_header => true})
+      @output.standard @mailchimp_cached.lists_list, {fields: [:id, :name]}
     end
   end
 
@@ -25,7 +26,7 @@ command :lists do |c|
   c.command :activity do |s|
     s.action do |global,options,args|
       id = get_required_argument(:id, options[:id], global[:default_list])
-      cli_print @mailchimp_cached.lists_activity(:id => id), :all
+      @output.standard @mailchimp_cached.lists_activity(:id => id)
     end
   end
 
@@ -34,7 +35,7 @@ command :lists do |c|
     s.action do |global,options,args|
       not_implemented
       id = get_required_argument(:id, options[:id], global[:default_list])
-      cli_print @mailchimp_cached.lists_clients(:id => id)
+      @output.standard @mailchimp_cached.lists_clients(:id => id)
     end
   end
 
