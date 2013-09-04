@@ -21,6 +21,10 @@ desc 'Default list to use'
 arg_name 'listID'
 flag [:default_list]
 
+desc 'formatted, raw, or awesome'
+arg_name 'format'
+flag [:output,:o], :default_value => "formatted"
+
 commands_from "mc/commands"
 
 pre do |global,command,options,args|
@@ -32,7 +36,7 @@ pre do |global,command,options,args|
   @mailchimp_cached = MailChimpCached.new(global[:apikey], {:debug => global[:debug], :reset_cache => global[:resetcache]})
 
   # create cli writer
-  @output = CommandLineWriter.new(:debug => global[:debug], :reset_cache => global[:resetcache])
+  @output = CommandLineWriter.new(global)
 
   # setup debug
   @debug = true if global[:debug]
