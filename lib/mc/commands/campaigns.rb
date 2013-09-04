@@ -1,5 +1,5 @@
 desc 'Campaign related tasks'
-command :campaign do |c|
+command :campaigns do |c|
 
   c.desc 'Create Campaign'
   c.command :create do |s|
