@@ -18,7 +18,7 @@ command :lists do |c|
   c.command :list do |s|
     s.action do |global,options,args|
       #cli_print @mailchimp_cached.lists_list, [:id, :name]#, view_to_print(global, [:id, :name, :list_rating, :stats => :member_count], {:show_header => true})
-      @output.standard @mailchimp_cached.lists_list, {fields: [:id, :name]}
+      @output.standard @mailchimp_cached.lists_list, fields: [:id, :name]
     end
   end
 

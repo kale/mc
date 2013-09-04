@@ -6,7 +6,7 @@ class CommandLineWriter
     puts "*** DEBUG ON ***" if @options[:debug]
   end
 
-  def standard(output, *options)
+  def standard(output, options={})
     case @options[:output].to_sym
     when :formatted
       formatted output, options
@@ -17,13 +17,13 @@ class CommandLineWriter
     end
   end
 
-  def formatted(output, options)
-    puts options.first
-    
+  def formatted(output, options={})
     # set default options
     options[:show_header] ||= true
     options[:show_index]  ||= false
     options[:debug]       ||= false
+
+    fields = options[:fields]
 
     # find the correct staring level in the returned json
     if output.kind_of? Hash
