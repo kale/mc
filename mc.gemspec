@@ -7,7 +7,8 @@ spec = Gem::Specification.new do |s|
   s.homepage = 'http://rubygems.org/gems/mc'
   s.license = 'MIT'
   s.platform = Gem::Platform::RUBY
-  s.summary = 'Command line interface to MailChimp. Eep eep!'
+  s.summary = 'mc - the command line interface to MailChimp'
+  s.description = 'Access your MailChimp account via the command line using the api. Eep eep!'
   s.files = `git ls-files`.split("\n")
   s.test_files = `git ls-files -- {test,features}/*`.split("\n")
   s.require_paths << 'lib'
