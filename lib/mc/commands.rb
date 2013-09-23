@@ -11,7 +11,7 @@ desc 'Turn on debugging'
 switch [:debug], :negatable => false
 
 desc 'Do not use cached result'
-switch [:resetcache], :negatable => false
+switch [:skipcache], :negatable => false
 
 desc 'MailChimp API Key'
 arg_name 'apikey'
@@ -30,10 +30,10 @@ commands_from "mc/commands"
 pre do |global,command,options,args|
   # quit if no api
   raise "Must include MailChimp API key either via --apikey flag or config file." if global[:apikey].nil?
-  
+
   # setup mailchimp api
   @mailchimp = MailChimp.new(global[:apikey], {:debug => global[:debug]})
-  @mailchimp_cached = MailChimpCached.new(global[:apikey], {:debug => global[:debug], :reset_cache => global[:resetcache]})
+  @mailchimp_cached = MailChimpCached.new(global[:apikey], {:debug => global[:debug], :skip_cache => global[:skipcache]})
 
   # create cli writer
   @output = CommandLineWriter.new(global)

@@ -14,7 +14,7 @@ class MailChimpCached < MailChimp
     expiry = 60 * 60 * 24
 
     @cache = FileCache.new(apikey, cache_dir, expiry)
-    @reset = options[:reset_cache]
+    @skip_cache = options[:skip_cache]
   end
 
   def cache_value(key, value)
@@ -27,7 +27,7 @@ class MailChimpCached < MailChimp
     puts "DEBUG: Calling '#{method_name}(#{args})'..." if @options[:debug]
     cache_key = Digest::SHA1.hexdigest(method_name.to_s + args.to_s)
 
-    if result = @cache.get(cache_key) and not @reset
+    if result = @cache.get(cache_key) and not @skip_cache
       puts "DEBUG: USING CACHED RESULT" if @options[:debug]
       return result
     else
