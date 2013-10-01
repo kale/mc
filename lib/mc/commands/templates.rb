@@ -1,5 +1,4 @@
-# desc 'View information about lists and subscribers'
-# arg_name 'Describe arguments to lists here'
+desc 'Manage templates within your account'
 
 command :templates do |c|
   # templates/list (string apikey, struct types, struct filters)

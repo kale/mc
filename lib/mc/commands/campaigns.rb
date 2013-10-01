@@ -3,120 +3,156 @@ command :campaigns do |c|
 
   c.desc 'Create Campaign'
   c.command :create do |s|
-    c.desc 'List ID'
-    c.flag [:id]
+    #TODO: support absplit, rss, auto campaign types
+    s.desc 'Type of campaign to create: regular, plaintext'
+    s.flag :type, :default_value => 'regular'
 
-    c.desc 'Subject'
-    c.flag [:subject]
+    s.desc 'List ID'
+    s.flag [:id]
 
-    c.desc 'From email'
-    c.flag [:from_email]
-    
-    c.desc 'From name'
-    c.flag [:from_name]
+    s.desc 'Subject'
+    s.flag [:subject]
 
-    c.desc 'To name'
-    c.flag [:to_name]
+    s.desc 'From email'
+    s.flag ['from-email']
 
-    c.desc 'Template ID'
-    c.flag [:template_id] 
+    s.desc 'From name'
+    s.flag ['from-name']
 
-    c.desc 'Gallery template ID'
-    c.flag [:gallery_template_id] 
+    s.desc 'To name'
+    s.flag ['to-name']
 
-    c.desc 'Base template ID'
-    c.flag [:base_template_id] 
+    s.desc 'Template ID'
+    s.flag 'template-id'
 
-    c.desc 'Folder ID'
-    c.flag [:folder_id] 
+    s.desc 'Gallery template ID'
+    s.flag ['gallery-template-id']
 
-    #c.desc 'Tracking'
-    #c.flag [:tracking] 
+    s.desc 'Base template ID'
+    s.flag ['base-template-id']
 
-    c.desc 'Title - internal name to use'
-    c.flag [:title]
+    s.desc 'Folder ID'
+    s.flag ['folder-id']
 
-    c.desc 'authenticate'
-    c.flag [:authenticate], :default => true
+    #s.desc 'Tracking'
+    #s.flag [:tracking]
 
-    #c.desc 'Analytics'
-    #c.flag [:analytics]
+    s.desc 'Title - internal name to use'
+    s.flag [:title]
 
-    c.desc 'Auto footer?'
-    c.switch :auto_footer, :default => false
+    s.desc 'authenticate'
+    s.switch :authenticate, :negatable => true
 
-    c.desc 'Inline css?'
-    c.switch :inline_css, :default => false
+    #s.desc 'Analytics'
+    #s.flag [:analytics]
 
-    c.desc 'Auto tweet?'
-    c.switch :tweet, :default => false
+    s.desc 'Auto footer?'
+    s.switch 'auto-footer'
 
-    #c.desc 'Auto FB post'
-    #c.flag [:auto_fb_post]
+    s.desc 'Enable inline css?'
+    s.switch 'inline-css', :negatable => false
 
-    c.desc 'FB comments?'
-    c.switch :fb_comments, :default => false
+    s.desc 'Auto tweet?'
+    s.switch :tweet, :negatable => false
 
-    c.desc 'HTML filename'
-    c.flag [:html_filename]
+    #s.desc 'Auto FB post'
+    #s.flag 'auto-fb-post'
 
-    c.desc 'TXT filename'
-    c.flag [:text_filename]
+    s.desc 'FB comments?'
+    s.switch 'fb-comments', :negatable => false
 
-    c.desc 'segmentation options [NAME,VALUE]'
-    c.flag [:seg_options]
+    s.desc 'Enable timewarp'
+    s.switch :timewarp, :negatable => false
 
-    c.desc 'Campaign ID'
-    c.flag [:cid]
+    s.desc 'HTML filename to load'
+    s.flag 'html-filename'
 
-    c.desc 'Send Campaign Now'
-    c.switch [:sendnow]
+    s.desc 'TXT filename to load'
+    s.flag 'text-filename'
 
-    c.desc 'Schedule Campaign'
-    c.switch [:schedule]
-
-    c.desc 'Send Test Campaign'
-    c.switch [:sendtest]    
+    s.desc 'segmentation options [NAME,VALUE]'
+    s.flag 'seg-options'
 
     s.action do |global,options,args|
       if options[:seg_options]
         field, value = options[:seg_options].split(",") if options[:seg_options]
-        options[:seg_options] = [{:field => field, :op => "like", :value => value}]
+        segment_conditions = [{:field => field, :op => "like", :value => value}]
       end
 
-      puts "Campaign created: #{@mailchimp.campaign_create(options, options[:seg_options])}"
+      type = options[:type]
+
+      standard_opts = {
+        :list_id => options[:id],
+        :subject => required_option(:subject, options[:subject]),
+        :from_email => required_option('from-email', options['from-email']),
+        :from_name => required_option('from-name', options['from-name']),
+        :to_name => options['to-name'],
+        :template_id => options['template-id'],
+        :gallery_template_id => options['gallery-template-id'],
+        :base_template_id => options['base-template-id'],
+        :folder => options['folder-id'],
+        :inline_css => true,
+        :tracking => {:opens => true, :html_clicks => true, :text_clicks => false},
+        :title => options['title'],
+        :authenticate => options[:authenticate],
+        #:analytics
+        :auto_footer => options['auto-footer'],
+        :inline_css => options['inline-css'],
+        :generate_text => options['generate-text'],
+        :auto_tweet => options['auto-tweet'],
+        :auto_fb_post => options['auto-fb-posts'],
+        :fb_comments => options['fb-comments'],
+        :timewarp => options[:timewarp],
+        :ecomm360 => options[:ecomm360]
+        #:crm_tracking
+      }
+
+      html = File.open(options['html-filename']).read if options['html-filename']
+      text = File.open(options['text-filename']).read if options['text-filename']
+      content = {
+        :html => html,
+        :text => text
+      }
+
+      segment_opts = {:match => "all", :conditions => segment_conditions} unless segment_conditions.nil?
+      type_opts = {}
+
+      campaign = @mailchimp.campaigns_create(:type => type, :options => standard_opts, :content => content, :segment_opts => segment_opts, :type_opts => type_opts)
+      puts "Created new campaign with id = #{campaign['id']}"
     end
   end
 
   c.desc 'Send Campaign Now'
-  c.command :sendnow do |s|
+  c.command :send do |s|
     s.action do |global,options,args|
-      campaign_id = options[:cid] || @mailchimp.cache.get(:campaign_id)
-      throw "Need a valid Campaign ID." if campaign_id.nil?
-
-      puts @mailchimp.campaign_send_now(:cid => campaign_id)
+      campaign_id = required_argument("Need to supply a campaign id", args.first)
+      puts @mailchimp.campaigns_send :cid => campaign_id
     end
   end
 
   c.desc 'Schedule Campaign'
   c.command :schedule do |s|
+    s.desc 'Date to schedule campaign in YYYY-MM-DD format'
+    s.flag :date, :default_value => (Time.now + 86400).strftime("%Y-%m-%d")
+
+    s.desc 'Time to schedule campaign at in HH:MM:SS format'
+    s.flag :time, :default_value => '08:00:00'
+
     s.action do |global,options,args|
-      campaign_id = options[:cid] || @campaign_id
-      #TODO: fix this
-      puts @mailchimp.campaign_schedule(:cid => campaign_id, :schedule_time => "2012-10-24 08:15:00")
+      campaign_id = options[:cid]
+      puts @mailchimp.campaigns_schedule(:cid => campaign_id, :schedule_time => options[:date] + ' ' + options[:time])
     end
   end
 
   c.desc 'Send Test Campaign'
   c.command :sendtest do |s|
     s.action do |global,options,args|
-      campaign_id = options[:cid] || @mailchimp.cache.get(:campaign_id)
-      throw "Need a valid Campaign ID." if campaign_id.nil?
+      campaign_id = required_argument("Need to supply a campaign id", args.first)
 
       puts "Sending test for campaign #{campaign_id}..."
       puts @mailchimp.campaign_send_test(:cid=> campaign_id, :test_emails => ["kale.davis@gmail.com", "kale@simplerise.com"])
     end
-  end  
+  end
 
   c.desc 'Delete Campaign'
   c.command :delete do |s|
@@ -127,17 +163,45 @@ command :campaigns do |c|
       campaign_delete(:cid=> campaign_id)
       puts "Deleted campaign #{campaign_id}."
     end
-  end  
+  end
 
   c.desc 'Get the list of campaigns and their details matching the specified filters'
   c.command :list do |s|
     s.switch :first
+    s.flag :start, :default_value => 0
+    s.flag :limit, :default_value => 50
+    s.flag :sort_field, :default_value => 'create_time'
+    s.flag :sort_dir, :default_value => 'DESC'
     s.action do |global,options,args|
-      if options[:first]
-        puts @mailchimp_cached.campaigns_list["data"].first
-      else
-        cli_print @mailchimp_cached.campaigns_list, :all
-      end
+      @output.standard @mailchimp.campaigns_list(:limit => options[:limit])['data'], :fields => [:id, :title, :status, :send_time, :emails_sent, :archive_url]
+    end
+  end
+
+  c.desc 'Check to see if campaign is ready to send'
+  c.command :ready do |s|
+    s.action do |global,options,args|
+      cid = options[:cid] || get_last_campaign_id
+
+      puts cid
+      @output.standard @mailchimp_cached.campaigns_ready(:cid=> cid)
+    end
+  end
+
+  c.command "segment-test" do |s|
+    s.desc "Use either 'any' or 'all'"
+    s.flag :match, :default_value => 'all'
+
+    s.desc 'Condition in the format field,op,value'
+    s.flag :condition
+    s.action do |global,options,args|
+      id = get_required_argument(:id, options[:id], global[:default_list])
+
+      segment = {}
+      segment['match'] = options[:match]
+      field, op, value = options[:condition].split(',')
+      segment['conditions'] = [{:field => field, :op => op, :value => value}]
+
+      puts @mailchimp.campaigns_segment_test(:list_id => id, :options => segment)
     end
   end
 end

@@ -1,8 +1,6 @@
 desc 'Ecomm related actions'
-arg_name 'Describe arguments to lists here'
 
 command :ecomm do |c|
-  # order-add(string apikey, struct order)
   c.desc 'Import Ecommerce Order Information to be used for Segmentation'
   c.command :add do |s|
     s.flag :order_id
