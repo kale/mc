@@ -45,6 +45,8 @@ pre do |global,command,options,args|
 end
 
 post do |global,command,options,args|
+  # put a space after each call
+  puts "\n"
 end
 
 on_error do |exception|
