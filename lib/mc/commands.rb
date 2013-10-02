@@ -36,7 +36,7 @@ pre do |global,command,options,args|
   @mailchimp_cached = MailChimpCached.new(global[:apikey], {:debug => global[:debug], :skip_cache => global[:skipcache]})
 
   # create cli writer
-  @output = CommandLineWriter.new(global)
+  @output = ConsoleWriter.new(global)
 
   # setup debug
   @debug = true if global[:debug]

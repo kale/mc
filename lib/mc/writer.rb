@@ -1,23 +1,49 @@
 require 'awesome_print'
+require 'table_print'
 
-class CommandLineWriter
+class ConsoleWriter
   def initialize(options)
     @options = options
     puts "*** DEBUG ON ***" if @options[:debug]
   end
 
-  def standard(output, options={})
-    case @options[:output].to_sym
-    when :formatted
-      formatted output, options
-    when :raw
-      puts output
-    when :awesome
-      ap output 
+  def standard(results, options={})
+    redirect_output? results, options
+    as_table results, options
+  end
+
+  def as_hash(results, options={})
+    redirect_output? results, options
+
+    if results.is_a? Hash and results.has_key? 'data'
+      ap results['data'].first, options
+    else
+      ap results, options
     end
   end
 
-  def formatted(output, options={})
+  def as_table(results, options={})
+    redirect_output? results, options
+
+    results.reverse! if options[:reverse]
+    tp results, options[:fields]
+  end
+
+  def errors(results)
+    puts "Error count: #{results['error_count']}"
+    results['errors'].each do |error|
+      puts error['error']
+    end
+  end
+
+  def flat_hash(hash, k = [])
+    return {k => hash} unless hash.is_a?(Hash)
+    hash.inject({}){ |h, v| h.merge! flat_hash(v[-1], k + [v[0]]) }
+  end
+
+  def as_formatted(results, options={})
+    redirect_output? results, options
+
     # set default options
     options[:show_header] ||= true
     options[:show_index]  ||= false
@@ -26,27 +52,28 @@ class CommandLineWriter
     fields = options[:fields]
 
     # find the correct staring level in the returned json
-    if output.kind_of? Hash
+    if results.kind_of? Hash
       # array of hashes or just a single hash?
-      if output["data"].nil?
-        output = [output]
+      if results["data"].nil?
+        results = [results]
       else
-        output = output["data"]
+        results = results["data"]
       end
     end
 
     if fields == :all
       fields = []
-      output.first.each_key {|key| fields << key}
+      results.first.each_key {|key| fields << key}
     end
 
-    output.reverse! if options[:reverse]
+    results.reverse! if options[:reverse]
+    results = results[0..options[:limit]] if options[:limit]
 
     puts "Fields: #{[*fields].join(', ')}" unless fields.nil? || !options[:show_header]
 
-    output.to_enum.with_index(1) do |item, index|
+    results.to_enum.with_index(1) do |item, index|
       if options[:debug] || fields.nil?
-        puts "Number of items: #{output.count}"
+        puts "Number of items: #{results.count}"
         puts "Fields:"
         item.each do |k,v|
           if v.kind_of? Hash
@@ -80,44 +107,68 @@ class CommandLineWriter
           end
         end
 
-        print "#{pad(index, output.count)} - " if options[:show_index]
+        print "#{pad(index, results.count)} - " if options[:show_index]
         puts  "#{values_to_print.join(' ')}"
       end
     end
   end
 
-  def search(output)
-    i = output
+  def search(results)
+    redirect_output?(results)
+
+    i = results
+    if i['exact_matches']['total'].to_i == 0 and i['full_search']['total'].to_i == 0
+      exit_now!("No matches found.")
+    end
+
+    members = []
+
     if i['exact_matches']['total'].to_i > 0
-      puts "EXACT MATCHES (#{i['exact_matches']['total']})\n============="
-      
+      puts "#{'='*20} Exact Matches (#{i['exact_matches']['total']}) #{'='*20}"
+
       i['exact_matches']['members'].each do |member|
-        show_member member
+        members << member
       end
-    end
-
-    if i['full_search']['total'].to_i > 0
-      puts "FULL SEARCH (#{i['full_search']['total']})\n============="
+    elsif i['full_search']['total'].to_i > 0
+      puts "#{'='*26} Matches (#{i['full_search']['total']}) #{'='*26}"
       i['full_search']['members'].each do |member|
-        show_member member
+        members << member
       end
     end
 
-    rescue 
-      puts output
+    tp members, :email, :id, :member_rating, :status, "VIP?" => {:display_method => :is_gmonkey}
   end
 
   private
 
-  def debug(output)
+  def debug(results)
     puts "#{'*'*50}"
-    puts output
-    puts output.class
+    puts results
+    puts results.class
     puts "#{'*'*50}"
   end
 
 
   def show_member(m)
     puts "#{m['id']} - #{m['email']}: Rating=#{m['member_rating']}, List=#{m['list_name']}, VIP?=#{m['is_gmonkey']}"
+  end
+
+  def redirect_output?(results, options={})
+    if @options[:output]
+      case @options[:output].to_sym
+      when :table
+        as_table results, options
+        exit_now!('')
+      when :formatted
+        as_formatted results, options
+        exit_now!('')
+      when :raw
+        puts results
+        exit_now!('')
+      when :awesome, :hash
+        ap results
+        exit_now!('')
+      end
+    end
   end
 end
