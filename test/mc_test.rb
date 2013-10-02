@@ -11,11 +11,11 @@ describe "MailChimp" do
   end
 
   it "should be able to ping MailChimp" do
-    @mailchimp.ping.must_equal "Everything's Chimpy!"
+    @mailchimp.helper_ping['msg'].must_equal "Everything's Chimpy!"
   end
 
   it "should pass to method_missing" do
-  	@mailchimp.lists_list.count.must_be :>, 0
+    @mailchimp.lists_list.count.must_be :>, 0
   end
 
   it "should see updated results" do
@@ -73,7 +73,7 @@ describe "MailChimpCached" do
     @mailchimp_cached.lists_subscribe(:id => @test_list_id, :email => {:email => email}, :double_optin => false)
     new_count = @mailchimp_cached.lists_members(:id => @test_list_id)["total"].to_i
     new_count.must_equal count
-    
+
     clear_cached_dir
 
     new_count = @mailchimp_cached.lists_members(:id => @test_list_id)["total"].to_i
