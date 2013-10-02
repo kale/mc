@@ -17,13 +17,13 @@ desc 'MailChimp API Key'
 arg_name 'apikey'
 flag [:apikey]
 
-desc 'Default list to use'
+desc 'List to use'
 arg_name 'listID'
-flag [:default_list]
+flag [:list]
 
 desc 'formatted, raw, or awesome'
 arg_name 'format'
-flag [:output,:o], :default_value => "formatted"
+flag [:output,:o]
 
 commands_from "mc/commands"
 
