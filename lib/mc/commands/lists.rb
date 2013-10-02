@@ -15,7 +15,7 @@ command :lists do |c|
   c.command :list do |s|
     s.action do |global,options,args|
       stats_column = lambda{|l| "#{l['stats']['member_count']} / #{na(l['stats']['open_rate'])} / #{na(l['stats']['click_rate'])}"}
-      @output.standard @mailchimp_cached.lists_list['data'], :fields => [:id, :name, "count / open % / click %" => stats_column]
+      @output.standard @mailchimp_cached.lists_list['data'], :fields => [:id, :name, {"count / open % / click %" => stats_column}]
     end
   end
 
