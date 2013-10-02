@@ -1,12 +1,13 @@
 source 'https://rubygems.org'
 gemspec
 
-gem 'gli', '>= 2.7'
-gem 'gibbon', '~> 0.5.0'
+gem 'gli', '>= 2.8'
+gem 'gibbon', '1.0.4'
 gem 'filecache'
-gem 'webmock'
-gem 'awesome_print'
+gem 'json'
 
-group :test do
-  gem 'm', '~> 1.3.1'
-end
+gem 'awesome_print'
+gem 'table_print'
+gem 'colorize'
+
+gem 'webmock'

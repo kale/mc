@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'gli'
+require 'colorize'
 
 require 'mc/version'
 require 'mc/helper'
