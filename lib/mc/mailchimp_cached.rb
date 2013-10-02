@@ -3,7 +3,6 @@ require 'filecache'
 require 'digest/sha1'
 
 class MailChimpCached < MailChimp
-
   def initialize(apikey, options={})
     super(apikey, options)
 
@@ -33,8 +32,12 @@ class MailChimpCached < MailChimp
     else
       category = method_name.to_s.split('_').first
       method   = method_name.to_s.split('_')[1..-1].join('_')
-      result = @api.send(category).send(method, *args)
+
+      throw "error: don't support caching send" if method == 'send'
+
+      result = @api.send(category).method_missing(method, *args)
       @cache.set(cache_key, result)
+
       return result
     end
   end
