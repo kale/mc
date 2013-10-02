@@ -1,7 +1,7 @@
 # mc - MailChimp from the command-line
+With your MailChimp [api key](http://admin.mailchimp.com/account/api) and this gem, you can access a lot of the functionality that you can do through the MailChimp web interface, but all from the command-line. It uses a command/sub-command approach that allows you to quickly find the command you need.
 
-With your MailChimp [api key](http://admin.mailchimp.com/account/api) and this gem, you can access a lot of the functionality that you can get through the MailChimp web interface.
-
+Caching is setup so that you can run the command multiple times without worrying about hitting the MailChimp servers. Caching is based on the api call + parameters used and expires in 24 hours. You can fetch new values by using the --skipcache global option.
 
 ## Install
 ```sh
@@ -9,67 +9,82 @@ With your MailChimp [api key](http://admin.mailchimp.com/account/api) and this g
 ```
 
 ## Usage
-
 To see all the commands you can run:
-```sh
-	mc --help or just mc
+```
+    mc --help
+```
+or just:
+
+```
+    mc
 ```
 
-You should see:
 
-	NAME
-	    mc - Command line interface to MailChimp. Eep eep!
+You should see something similar to:
 
-	SYNOPSIS
-	    mc [global options] command [command options] [arguments...]
+    NAME
+      mc - Command line interface to MailChimp. Eep eep!
 
-	VERSION
-	    0.0.1
+    SYNOPSIS
+      mc [global options] command [command options] [arguments...]
 
-	GLOBAL OPTIONS
-	    --apikey=apikey       - MailChimp API Key (default: none)
-	    --debug               - Turn on debugging
-	    --default_list=listID - Default list to use (default: none)
-	    --help                - Show this message
-	    --resetcache          - Do not use cached result
-	    --version 
+    GLOBAL OPTIONS
+      --apikey=apikey     - MailChimp API Key (default: none)
+      --debug             - Turn on debugging
+      --help              - Show this message
+      --list=listID       - List to use (default: none)
+      --output, -o format - formatted, raw, or awesome (default: none)
+      --skipcache         - Do not use cached result
+      --version           - Display the program version
 
-	COMMANDS
-	    api              - API/Security related commands
-	    campaign         - Campaign related tasks
-	    folder           - Folder related funtions
-	    goldenmonkey, gm - Golden Monkeys
-	    help             - Shows a list of commands or help for one command
-	    helper           - Basic admin funtions
-	    initconfig       - Initialize the config file using current global options
-	    list             - View information about lists and subscribers
+    COMMANDS
+      campaigns  - Campaign related tasks
+      ecomm      - Ecomm related actions
+      export     - Export
+      gallery    - Manage images and documents that are in your account
+      help       - Shows a list of commands or help for one command
+      helper     - Basic admin funtions
+      initconfig - Initialize the config file using current global options
+      lists      - View information about lists and subscribers
+      reports    - Reports
+      search     - Search campaigns and members
+      templates  - Manage templates within your account
+      users      - Users
+      vip        - VIPs
+
 
 You can get details on specific subcommands by:
 
-	mc help list
+```
+    mc help list
+```
+
+## With Great Power
+With this tool you'll be able to access your account in ways that will bypass confirmations and limits that you'll find within the regular MailChimp web application. So for example, you can unsubscribe users and send campaigns without any conformation using the correct command and parameters. Caching, as mentioned above, is setup to avoid hitting your account too much, but care still needs to be taken. Lastly, before using this tool it is highly recommended that you read the [MailChimp API faq](http://apidocs.mailchimp.com/api/faq/) and especially note the 'best practices' listed within it.
 
 
 ## Config File
-
 To create a config file at ~/.mailchimp you can run:
 
 	mc initconfig
 
 You can then edit that file and include any defaults you want to set. I would highly recommend at a minimal including the api key and a default list:
 
- 	:apikey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-usx
+	:apikey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-usx
 	:default_list: xxxxxxxxxx
 
 > Note: once you get your api key you can get the list id by running 'mc list lists'.
 
 ## Todo
-
-* Currently focused on creating more subcommands
+* Finish supporting all api calls
 * Command-line tab auto-completion
-* Addition descriptions and help
+* Better descriptions and help
 * Complete testing coverage
 
-## Thanks
+## License
+See license.txt file.
 
-* [MailChimp](http://mailchimp.com) for having a sweet API
-* Amro Mousa who maintains [Gibbon](https://github.com/amro/gibbon), the Ruby wrapper for the MailChimp API
+## Thanks
+ * Amro for the easy to use [gibbon](https://github.com/amro/gibbon) gem
+ * David Copeland's [gli](https://github.com/davetron5000/gli) command-line gem
+ * And of course MailChimp and their sweet API
