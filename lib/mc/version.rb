@@ -1,3 +1,4 @@
 module MC
-  VERSION = '0.0.1'
+  # have to check const defined for 1.8.7 to avoid warnings
+  VERSION = '0.0.3' unless const_defined?(:VERSION)
 end
