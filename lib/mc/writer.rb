@@ -29,6 +29,10 @@ class ConsoleWriter
     tp results, options[:fields]
   end
 
+  def as_raw(results)
+    puts results
+  end
+
   def errors(results)
     puts "Error count: #{results['error_count']}"
     results['errors'].each do |error|
@@ -163,7 +167,7 @@ class ConsoleWriter
         as_formatted results, options
         exit_now!('')
       when :raw
-        puts results
+        as_raw results
         exit_now!('')
       when :awesome, :hash
         ap results
