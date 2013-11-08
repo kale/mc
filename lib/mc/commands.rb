@@ -6,6 +6,7 @@ program_desc 'Command line interface to MailChimp. Eep eep!'
 version MC::VERSION
 
 config_file '.mailchimp'
+subcommand_option_handling :normal
 
 desc 'Turn on debugging'
 switch [:debug], :negatable => false
