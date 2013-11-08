@@ -1,8 +1,5 @@
 desc 'VIPs'
 command :vip do |c|
-  c.desc 'List ID'
-  c.flag :id
-
   # vip/activity (string apikey)
   c.desc 'Show all Activity (opens/clicks) for VIPs over the past 10 days'
   c.command :activity do |s|
@@ -14,16 +11,17 @@ command :vip do |c|
   # vip/add (string apikey, string id, array emails)
   c.desc 'Add VIP(s)'
   c.command :add do |s|
+    s.desc 'List ID'
+    s.flag :id
+
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:default_list])
+      id = get_required_argument(:id, options[:id], global[:list])
       emails = create_email_struct(required_argument("Need to provide an email address.", args))
 
       status = @mailchimp.vip_add(:id => id, :emails => emails)
-      if emails.count == status['success_count']
-        puts "Successfully added email(s)!"
-      else
-        @output.errors status
-      end
+
+      puts "Added #{status['success_count']} subscriber(s) as VIPs." if successful? status
+      show_errors status
     end
   end
 
@@ -31,13 +29,13 @@ command :vip do |c|
   c.desc 'Remove VIP(s)'
   c.command :remove do |s|
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:default_list])
+      id = get_required_argument(:id, options[:id], global[:list])
       emails = create_email_struct(required_argument("Need to provide an email address.", args))
 
       status = @mailchimp.vip_del(:id => id, :emails => emails)
-      #TODO: create helper method to display success
-      puts status
-      #status["success"] > 0 ? "#{options[:email]} removed!" : "Oops!"
+
+      puts "Removed #{status['success_count']} subscriber(s) as VIPs." if successful? status
+      show_errors status
     end
   end
 

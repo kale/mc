@@ -51,6 +51,20 @@ module Helper
     end
   end
 
+  def successful? status
+    status['success_count'] > 0
+  end
+
+  def show_errors status
+    if status['error_count'] > 0
+      puts "Oops, had #{status['error_count']} error(s):"
+      status['errors'].each do |error|
+        # remove periods just to make the error look nicer
+        puts "  #{error['error'].gsub('.','')} - #{error['email']['email']}"
+      end
+    end
+  end
+
   private
 
   def pad(num, total)
