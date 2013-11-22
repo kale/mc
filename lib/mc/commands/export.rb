@@ -15,7 +15,7 @@ command :export do |c|
     c.flag :condition
 
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:default_list])
+      id = get_required_argument(:id, options[:id], global[:list])
 
       if options[:condition]
         segment = {}
@@ -25,10 +25,6 @@ command :export do |c|
       end
 
       status = options[:status]
-
-      # segment = {}
-      # segment["match"] = "all"
-      # segment["conditions"] = [{:field => 'aim', :op => 'open', :value => 'b55303410e'}]
 
       @mailchimp.export_list(:id => id, :status => status, :segment => segment).each do |subscriber|
         puts subscriber
@@ -66,4 +62,3 @@ command :export do |c|
     end
   end
 end
-
