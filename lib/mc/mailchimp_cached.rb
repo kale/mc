@@ -33,7 +33,8 @@ class MailChimpCached < MailChimp
       category = method_name.to_s.split('_').first
       method   = method_name.to_s.split('_')[1..-1].join('_')
 
-      throw "error: don't support caching send" if method == 'send'
+      throw "error: don't support caching export" if category == "export"
+      throw "error: don't support caching send" if method == "send"
 
       result = @api.send(category).method_missing(method, *args)
       @cache.set(cache_key, result)

@@ -15,7 +15,7 @@ class MailChimp
     category = method_name.to_s.split('_').first
     method   = method_name.to_s.split('_')[1..-1].join('_')
     if category == "export"
-      @exporter.send(method, *args)
+      @exporter.__send__(method, *args)
     else
       if method == 'send'
         # handle wonk case of 'send' method
