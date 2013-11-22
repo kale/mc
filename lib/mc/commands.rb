@@ -22,7 +22,7 @@ desc 'List to use'
 arg_name 'listID'
 flag [:list]
 
-desc 'formatted, raw, or awesome'
+desc 'table, formatted, raw, or hash'
 arg_name 'format'
 flag [:output,:o]
 
