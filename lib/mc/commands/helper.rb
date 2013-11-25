@@ -1,9 +1,31 @@
 desc 'Basic admin funtions'
 command :helper do |c|
   c.desc 'View API key currently configured'
-  c.command :apikey do |apikey|
-    apikey.action do |global,options,args|
+  c.command :apikey do |s|
+    s.action do |global,options,args|
       puts global[:apikey]
+    end
+  end
+
+  c.desc 'View user_id of account'
+  c.command :userid do |s|
+    s.action do |global,options,args|
+      puts @mailchimp_cached.helper_account_details['user_id']
+    end
+  end
+
+  c.desc 'View default list if set in config file'
+  c.command 'default-list' do |s|
+    s.action do |global,options,args|
+      global[:list].nil? ? puts('No default list set.') : puts(global[:list])
+    end
+  end
+
+  c.desc 'Quickly see the last campaign sent'
+  c.command 'last-campaign' do |s|
+    s.action do |global,options,args|
+      result = @mailchimp.campaigns_list(:limit => 1)['data'].first
+      puts "#{result['id']}: #{result['title']}"
     end
   end
 
