@@ -147,17 +147,6 @@ command :lists do |c|
     end
   end
 
-  c.desc 'Get all of the merge variables for a list.'
-  c.command 'merge-vars' do |s|
-    s.desc 'list id'
-    s.flag :id
-
-    s.action do |global,options,args|
-      id = required_option(:id, options[:id], global[:list])
-      @output.standard @mailchimp_cached.lists_merge_vars(:id => [id])['data'].first['merge_vars']
-    end
-  end
-
   c.desc 'Retrieve all of the Static Segments for a list.'
   c.command 'static-segments' do |s|
     s.desc 'list id'
