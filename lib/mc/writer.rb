@@ -117,30 +117,42 @@ class ConsoleWriter
     end
   end
 
-  def search(results)
+  def campaign_search(results)
+    if results['total'].to_i == 0
+      exit_now!("No matches found.")
+    end
+
+    results['results'].each_with_index do |result, index|
+      puts "#{'-'*15} [#{index+1}] #{'-'*15}"
+      puts result['snippet'].strip.gsub(/\n/, ' ')
+      puts "From campaign \"#{result['campaign']['title']}\" (#{result['campaign']['id']}) that was sent on #{result['campaign']['send_time'].split.first}"
+      puts "\n"
+    end
+  end
+
+  def member_search(results)
     redirect_output?(results)
 
-    i = results
-    if i['exact_matches']['total'].to_i == 0 and i['full_search']['total'].to_i == 0
+    if results['exact_matches']['total'].to_i == 0 and results['full_search']['total'].to_i == 0
       exit_now!("No matches found.")
     end
 
     members = []
 
-    if i['exact_matches']['total'].to_i > 0
-      puts "#{'='*20} Exact Matches (#{i['exact_matches']['total']}) #{'='*20}"
+    if results['exact_matches']['total'].to_i > 0
+      puts "#{'='*20} Exact Matches (#{results['exact_matches']['total']}) #{'='*20}"
 
-      i['exact_matches']['members'].each do |member|
+      results['exact_matches']['members'].each do |member|
         members << member
       end
-    elsif i['full_search']['total'].to_i > 0
-      puts "#{'='*26} Matches (#{i['full_search']['total']}) #{'='*26}"
-      i['full_search']['members'].each do |member|
+    elsif results['full_search']['total'].to_i > 0
+      puts "#{'='*26} Matches (#{results['full_search']['total']}) #{'='*26}"
+      results['full_search']['members'].each do |member|
         members << member
       end
     end
 
-    tp members, :email, :id, :member_rating, :status, "VIP?" => {:display_method => :is_gmonkey}
+    tp members, :email, :id, :list_name, :member_rating, :status, "VIP?" => {:display_method => :is_gmonkey}
   end
 
   private

@@ -4,8 +4,8 @@ command :search do |c|
   c.desc 'Search all campaigns for the specified query terms'
   c.command :campaigns do |s|
     s.action do |global,options,args|
-      campaigns = required_argument("You need to include a search argument: mc search campaigns <query terms>", args.join(' '))
-      @output.search @mailchimp_cached.helper_search_members(:query => query)
+      query = required_argument("You need to include a search argument: mc search campaigns <query terms>", args.join(' '))
+      @output.campaign_search @mailchimp_cached.helper_search_campaigns(:query => query)
     end
   end
 
@@ -14,7 +14,7 @@ command :search do |c|
   c.command :members do |s|
     s.action do |global,options,args|
       query = required_argument("You need to include a search argument: mc search members <query terms>", args.join(' '))
-      @output.search @mailchimp_cached.helper_search_members(:query => query)
+      @output.member_search @mailchimp_cached.helper_search_members(:query => query)
     end
   end
 end
