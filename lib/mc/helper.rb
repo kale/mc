@@ -9,12 +9,6 @@ module Helper
     end
   end
 
-  def get_required_argument(name, option, global)
-    return option unless option.nil?
-    return global unless global.nil?
-    help_now!("--#{name.to_s} is required")
-  end
-
   def required_option(name, *options)
     options.each {|o| return o unless o.nil? or o.empty?}
     exit_now!("Error: --#{name.to_s} is required")

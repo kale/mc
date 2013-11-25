@@ -15,7 +15,7 @@ command :vip do |c|
     s.flag :id
 
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:list])
+      id = required_option(:id, options[:id], global[:list])
       emails = create_email_struct(required_argument("Need to provide an email address.", args))
 
       status = @mailchimp.vip_add(:id => id, :emails => emails)
@@ -29,7 +29,7 @@ command :vip do |c|
   c.desc 'Remove VIP(s)'
   c.command :remove do |s|
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:list])
+      id = required_option(:id, options[:id], global[:list])
       emails = create_email_struct(required_argument("Need to provide an email address.", args))
 
       status = @mailchimp.vip_del(:id => id, :emails => emails)

@@ -29,7 +29,7 @@ command :lists do |c|
     s.flag :id
 
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:list])
+      id = required_option(:id, options[:id], global[:list])
 
       results = @mailchimp_cached.lists_clients(:id => id)
       if global[:output]
@@ -50,7 +50,7 @@ command :lists do |c|
     s.flag :id
 
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:list])
+      id = required_option(:id, options[:id], global[:list])
       @output.standard @mailchimp_cached.lists_growth_history(:id => id)
     end
   end
@@ -70,7 +70,7 @@ command :lists do |c|
     s.flag :num, :default_value => 25
 
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:list])
+      id = required_option(:id, options[:id], global[:list])
       @output.standard @mailchimp_cached.lists_locations(:id => id)[0..options[:num].to_i]
     end
   end
@@ -82,7 +82,7 @@ command :lists do |c|
     s.flag :id
 
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:list])
+      id = required_option(:id, options[:id], global[:list])
       emails = create_email_struct(required_argument("Need to provide one or more email addresses.", args))
 
       @output.standard @mailchimp_cached.lists_member_activity(:id => id, :emails => emails)['data'].first['activity'], :fields => [:action, :timestamp, :title, :url]
@@ -96,7 +96,7 @@ command :lists do |c|
     s.flag :id
 
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:list])
+      id = required_option(:id, options[:id], global[:list])
       emails = create_email_struct(required_argument("Need to provide one or more email addresses.", args))
 
       @output.as_hash @mailchimp_cached.lists_member_info(:id => id, :emails => emails)
@@ -110,7 +110,7 @@ command :lists do |c|
     s.flag :limit, :default_value => 25
 
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:list])
+      id = required_option(:id, options[:id], global[:list])
       @output.standard @mailchimp_cached.lists_members(:id => id, :limit => options[:limit])['data'], :fields => [:email, :member_rating, :status, :is_gmonkey]
     end
   end
@@ -153,7 +153,7 @@ command :lists do |c|
     s.flag :id
 
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:list])
+      id = required_option(:id, options[:id], global[:list])
       @output.standard @mailchimp_cached.lists_merge_vars(:id => [id])['data'].first['merge_vars']
     end
   end
@@ -164,7 +164,7 @@ command :lists do |c|
     s.flag :id
 
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:list])
+      id = required_option(:id, options[:id], global[:list])
       @output.as_hash @mailchimp_cached.lists_static_segments(:id => id)
     end
   end
@@ -175,7 +175,7 @@ command :lists do |c|
     s.flag :id
 
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:list])
+      id = required_option(:id, options[:id], global[:list])
       @output.as_hash @mailchimp_cached.lists_segments(:id => id)
     end
   end

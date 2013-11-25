@@ -15,7 +15,7 @@ command :export do |c|
     c.flag :condition
 
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:list])
+      id = required_option(:id, options[:id], global[:list])
 
       if options[:condition]
         segment = {}
