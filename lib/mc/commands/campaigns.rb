@@ -82,7 +82,7 @@ command :campaigns do |c|
       type = options[:type]
 
       standard_opts = {
-        :list_id => options[:id],
+        :list_id => required_option(:id, options[:id], global[:list]),
         :subject => required_option(:subject, options[:subject]),
         :from_email => required_option('from-email', options['from-email']),
         :from_name => required_option('from-name', options['from-name']),
@@ -124,14 +124,21 @@ command :campaigns do |c|
 
   c.desc 'Send Campaign Now'
   c.command :send do |s|
+    s.desc 'Campaign ID'
+    s.flag :cid
+
     s.action do |global,options,args|
-      campaign_id = required_argument("Need to supply a campaign id", args.first)
-      puts @mailchimp.campaigns_send :cid => campaign_id
+      cid = required_argument("Need to supply a campaign id", options[:cid])
+      print "Sending campaign #{cid}... "
+      @mailchimp.campaigns_send(:cid => cid)["complete"] ? puts("done!") : puts("ut oh, no can do!")
     end
   end
 
   c.desc 'Schedule Campaign'
   c.command :schedule do |s|
+    s.desc 'Campaign ID'
+    s.flag :cid
+
     s.desc 'Date to schedule campaign in YYYY-MM-DD format'
     s.flag :date, :default_value => (Time.now + 86400).strftime("%Y-%m-%d")
 
@@ -139,29 +146,34 @@ command :campaigns do |c|
     s.flag :time, :default_value => '08:00:00'
 
     s.action do |global,options,args|
-      campaign_id = options[:cid]
-      puts @mailchimp.campaigns_schedule(:cid => campaign_id, :schedule_time => options[:date] + ' ' + options[:time])
+      cid = required_argument("Need to supply a campaign id", options[:cid])
+      puts @mailchimp.campaigns_schedule(:cid => cid, :schedule_time => options[:date] + ' ' + options[:time])
     end
   end
 
   c.desc 'Send Test Campaign'
-  c.command :sendtest do |s|
-    s.action do |global,options,args|
-      campaign_id = required_argument("Need to supply a campaign id", args.first)
+  c.command 'send-test' do |s|
+    s.desc 'Campaign ID'
+    s.flag :cid
 
-      puts "Sending test for campaign #{campaign_id}..."
-      puts @mailchimp.campaign_send_test(:cid=> campaign_id, :test_emails => ["kale.davis@gmail.com", "kale@simplerise.com"])
+    s.action do |global,options,args|
+      cid = required_argument("Need to supply a campaign id", options[:cid])
+      emails = required_argument("Need to supply at least one email to send test campaign to.", args)
+
+      print "Sending test for campaign #{cid}... "
+      @mailchimp.campaigns_send_test(:cid=> cid, :test_emails => emails)["complete"] ? puts("done!") : puts("ut oh, no can do!")
     end
   end
 
   c.desc 'Delete Campaign'
   c.command :delete do |s|
-    s.action do |global,options,args|
-      campaign_id = options[:cid] || @mailchimp.cache.get(:campaign_id)
-      throw "Need a valid Campaign ID." if campaign_id.nil?
+    s.desc 'Campaign ID'
+    s.flag :cid
 
-      campaign_delete(:cid=> campaign_id)
-      puts "Deleted campaign #{campaign_id}."
+    s.action do |global,options,args|
+      cid = required_argument("Need to supply a campaign id", options[:cid])
+      print "Deleting campaign #{cid}... "
+      @mailchimp.campaigns_send_test(:cid=> cid)["complete"] ? puts("done!") : puts("ut oh, no can do!")
     end
   end
 
@@ -179,25 +191,33 @@ command :campaigns do |c|
 
   c.desc 'Check to see if campaign is ready to send'
   c.command :ready do |s|
+    s.desc 'Campaign ID'
+    s.flag :cid
+
     s.action do |global,options,args|
       cid = options[:cid] || get_last_campaign_id
 
-      puts cid
       @output.standard @mailchimp_cached.campaigns_ready(:cid=> cid)
     end
   end
 
   c.command "segment-test" do |s|
+    s.desc 'List ID'
+    s.flag :id
+
     s.desc "Use either 'any' or 'all'"
     s.flag :match, :default_value => 'all'
 
     s.desc 'Condition in the format field,op,value'
     s.flag :condition
+
     s.action do |global,options,args|
-      id = get_required_argument(:id, options[:id], global[:default_list])
+      id = required_option(:id, options[:id], global[:list])
+      match = required_option(:match, options[:match])
+      condition = required_option(:condition, options[:condition])
 
       segment = {}
-      segment['match'] = options[:match]
+      segment['match'] = match
       field, op, value = options[:condition].split(',')
       segment['conditions'] = [{:field => field, :op => op, :value => value}]
 
