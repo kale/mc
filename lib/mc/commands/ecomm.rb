@@ -16,14 +16,15 @@ command :ecomm do |c|
 
     s.action do |global,options,args|
       order = {}
-      order[:id] = options[:order_id]
+      order[:id] = required_option(:order_id, options[:order_id])
+      order[:campaign_id] = options[:campaign_id]
       order[:email_id] = options[:email_id]
       order[:email] = options[:email]
       order[:total] = options[:total]
       order[:order_date] = options[:order_date]
       order[:shipping] = options[:shipping]
       order[:tax] = options[:tax]
-      order[:store_id] = options[:store_id]
+      order[:store_id] = required_option(:store_id, options[:store_id])
       order[:store_name] = options[:store_name]
       order[:items] = [{:product_id => 500, :product_name => "Freddie Doll", :category_id => 1, :category_name => "Toys"}]
 
@@ -32,6 +33,27 @@ command :ecomm do |c|
       else
         puts "Order not added. :("
       end
+    end
+  end
+
+  c.desc 'Delete Ecommerce Order Information used for segmentation'
+  c.command :delete do |s|
+    s.flag :store_id
+    s.flag :order_id
+
+    s.action do |global,options,args|
+      if @mailchimp.ecomm_order_del(:store_id => required_option(:store_id, options[:store_id]), :order_id => required_option(:order_id, options[:order_id]))
+        puts "Order deleted!"
+      else
+        puts "Order not deleted. :("
+      end
+    end
+  end
+
+  c.desc 'Retrieve the Ecommerce Orders for an account'
+  c.command :orders do |s|
+    s.action do |global,options,args|
+      @output.standard @mailchimp_cached.ecomm_orders['data'], :fields => [:store_id, :store_name, :order_id, :campaign_id, :email, :order_total, :order_date]
     end
   end
 end
