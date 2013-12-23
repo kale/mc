@@ -164,8 +164,12 @@ command :campaigns do |c|
     s.flag :limit, :default_value => 50
     s.flag :sort_field, :default_value => 'create_time'
     s.flag :sort_dir, :default_value => 'DESC'
+
+    s.flag :status
+    s.flag :type
     s.action do |global,options,args|
-      @output.standard @mailchimp.campaigns_list(:limit => options[:limit])['data'], :fields => [:id, :title, :status, :send_time, :emails_sent, :archive_url]
+      results = @mailchimp.campaigns_list(:limit => options[:limit], :filters => {:status => options[:status], :type => options[:type]})
+      @output.standard results['data'], :fields => [:id, :title, :status, :send_time, :emails_sent, :archive_url]
     end
   end
 
