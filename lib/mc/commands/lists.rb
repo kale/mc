@@ -7,7 +7,7 @@ command :lists do |c|
 
     s.action do |global,options,args|
       id = required_argument(:id, options[:id], global[:list])
-      @output.standard @mailchimp_cached.lists_activity(:id => id)
+      @output.standard @mailchimp_cached.lists_abuse_reports(:id => id)['data']
     end
   end
 
