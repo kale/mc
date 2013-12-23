@@ -62,6 +62,9 @@ You can get details on specific subcommands by:
 ## With Great Power
 With this tool you'll be able to access your account in ways that will bypass confirmations and limits that you'll find within the regular MailChimp web application. So for example, you can unsubscribe users and send campaigns without any conformation using the correct command and parameters. Caching, as mentioned above, is setup to avoid hitting your account too much, but care still needs to be taken. Lastly, before using this tool it is highly recommended that you read the [MailChimp API faq](http://apidocs.mailchimp.com/api/faq/) and especially note the 'best practices' listed within it.
 
+## Want Updates?
+
+Of course this repo has to have an associated MailChimp list (only used to update you on new version releases): http://eepurl.com/K8Vcj
 
 ## Config File
 To create a config file at ~/.mailchimp you can run:
@@ -71,7 +74,7 @@ To create a config file at ~/.mailchimp you can run:
 You can then edit that file and include any defaults you want to set. I would highly recommend at a minimal including the api key and a default list:
 
 	:apikey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-usx
-	:default_list: xxxxxxxxxx
+	:list: xxxxxxxxxx
 
 > Note: once you get your api key you can get the list id by running 'mc list lists'.
 
