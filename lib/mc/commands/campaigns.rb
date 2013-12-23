@@ -145,49 +145,6 @@ command :campaigns do |c|
     end
   end
 
-  c.desc 'Send Campaign Now'
-  c.command :send do |s|
-    s.desc 'Campaign ID'
-    s.flag :cid
-
-    s.action do |global,options,args|
-      cid = required_argument("Need to supply a campaign id", options[:cid])
-      print "Sending campaign #{cid}... "
-      @mailchimp.campaigns_send(:cid => cid)["complete"] ? puts("done!") : puts("ut oh, no can do!")
-    end
-  end
-
-  c.desc 'Schedule Campaign'
-  c.command :schedule do |s|
-    s.desc 'Campaign ID'
-    s.flag :cid
-
-    s.desc 'Date to schedule campaign in YYYY-MM-DD format'
-    s.flag :date, :default_value => (Time.now + 86400).strftime("%Y-%m-%d")
-
-    s.desc 'Time to schedule campaign at in HH:MM:SS format'
-    s.flag :time, :default_value => '08:00:00'
-
-    s.action do |global,options,args|
-      cid = required_argument("Need to supply a campaign id", options[:cid])
-      puts @mailchimp.campaigns_schedule(:cid => cid, :schedule_time => options[:date] + ' ' + options[:time])
-    end
-  end
-
-  c.desc 'Send Test Campaign'
-  c.command 'send-test' do |s|
-    s.desc 'Campaign ID'
-    s.flag :cid
-
-    s.action do |global,options,args|
-      cid = required_argument("Need to supply a campaign id", options[:cid])
-      emails = required_argument("Need to supply at least one email to send test campaign to.", args)
-
-      print "Sending test for campaign #{cid}... "
-      @mailchimp.campaigns_send_test(:cid=> cid, :test_emails => emails)["complete"] ? puts("done!") : puts("ut oh, no can do!")
-    end
-  end
-
   c.desc 'Delete Campaign'
   c.command :delete do |s|
     s.desc 'Campaign ID'
@@ -224,6 +181,24 @@ command :campaigns do |c|
     end
   end
 
+  c.desc 'Schedule Campaign'
+  c.command :schedule do |s|
+    s.desc 'Campaign ID'
+    s.flag :cid
+
+    s.desc 'Date to schedule campaign in YYYY-MM-DD format'
+    s.flag :date, :default_value => (Time.now + 86400).strftime("%Y-%m-%d")
+
+    s.desc 'Time to schedule campaign at in HH:MM:SS format'
+    s.flag :time, :default_value => '08:00:00'
+
+    s.action do |global,options,args|
+      cid = required_argument("Need to supply a campaign id", options[:cid])
+      puts @mailchimp.campaigns_schedule(:cid => cid, :schedule_time => options[:date] + ' ' + options[:time])
+    end
+  end
+
+  c.desc 'Allows one to test their segmentation rules before creating a campaign using them'
   c.command "segment-test" do |s|
     s.desc 'List ID'
     s.flag :id
@@ -245,6 +220,32 @@ command :campaigns do |c|
       segment['conditions'] = [{:field => field, :op => op, :value => value}]
 
       puts @mailchimp.campaigns_segment_test(:list_id => id, :options => segment)
+    end
+  end
+
+  c.desc 'Send Campaign Now'
+  c.command :send do |s|
+    s.desc 'Campaign ID'
+    s.flag :cid
+
+    s.action do |global,options,args|
+      cid = required_argument("Need to supply a campaign id", options[:cid])
+      print "Sending campaign #{cid}... "
+      @mailchimp.campaigns_send(:cid => cid)["complete"] ? puts("done!") : puts("ut oh, no can do!")
+    end
+  end
+
+  c.desc 'Send Test Campaign'
+  c.command 'send-test' do |s|
+    s.desc 'Campaign ID'
+    s.flag :cid
+
+    s.action do |global,options,args|
+      cid = required_argument("Need to supply a campaign id", options[:cid])
+      emails = required_argument("Need to supply at least one email to send test campaign to.", args)
+
+      print "Sending test for campaign #{cid}... "
+      @mailchimp.campaigns_send_test(:cid=> cid, :test_emails => emails)["complete"] ? puts("done!") : puts("ut oh, no can do!")
     end
   end
 end
