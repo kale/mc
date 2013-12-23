@@ -6,8 +6,12 @@ command :reports do |c|
     s.arg_name 'campaign id'
     s.flag :cid
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
+
       member_column = lambda{|l| "#{l['member']['email']}"}
       @output.standard @mailchimp_cached.reports_abuse(:cid => cid)['data'], :fields => [:member => {:display_method => member_column}]
     end
@@ -19,8 +23,12 @@ command :reports do |c|
     s.arg_name 'campaign id'
     s.flag :cid
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
+
       @output.as_hash @mailchimp_cached.reports_advice :cid => cid
     end
   end
@@ -31,8 +39,12 @@ command :reports do |c|
     s.arg_name 'campaign id'
     s.flag :cid
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
+
       email = create_email_struct(required_argument("Need to provide an email address.", args))
       puts @mailchimp_cached.reports_bounce_message(:cid => cid, :email => email.first)['message']
     end
@@ -44,8 +56,11 @@ command :reports do |c|
     s.arg_name 'campaign id'
     s.flag :cid
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
 
       results = @mailchimp_cached.reports_bounce_messages(:cid => cid)
       if global[:output]
@@ -74,10 +89,14 @@ command :reports do |c|
     s.flag :cid
     s.flag :tid
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
       tid = options[:tid]
       member_column = lambda{|l| "#{l['member']['email']}"}
+
       @output.standard @mailchimp_cached.reports_click_detail(:cid => cid, :tid => tid)['data'], :fields => [:clicks, {:member => {:display_method => member_column}}]
     end
   end
@@ -88,8 +107,12 @@ command :reports do |c|
     s.arg_name 'campaign id'
     s.flag :cid
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
+
       @output.standard @mailchimp_cached.reports_clicks(:cid => cid)['total'], :fields => [:tid, {:url => {:width => 80}}, :clicks, :unique]
     end
   end
@@ -100,8 +123,12 @@ command :reports do |c|
     s.arg_name 'campaign id'
     s.flag :cid
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
+
       @output.standard @mailchimp_cached.reports_domain_performance :cid => cid
     end
   end
@@ -112,8 +139,12 @@ command :reports do |c|
     s.arg_name 'campaign id'
     s.flag :cid
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
+
       @output.standard @mailchimp_cached.reports_ecomm_orders(:cid => cid)['data']
     end
   end
@@ -124,8 +155,12 @@ command :reports do |c|
     s.arg_name 'campaign id'
     s.flag :cid
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
+
       @output.as_hash @mailchimp_cached.reports_eepurl(:cid => cid)
     end
   end
@@ -136,8 +171,12 @@ command :reports do |c|
     s.arg_name 'campaign id'
     s.flag :cid
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
+
       @output.standard @mailchimp_cached.reports_geo_opens(:cid => cid), :fields => [:code, :name, :opens]
     end
   end
@@ -148,8 +187,12 @@ command :reports do |c|
     s.arg_name 'campaign id'
     s.flag :cid
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
+
       @output.standard @mailchimp_cached.reports_google_analytics :cid => cid
     end
   end
@@ -160,9 +203,13 @@ command :reports do |c|
     s.arg_name 'campaign id'
     s.flag :cid
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
       email = create_email_struct(required_argument("Need to provide an email address.", args))
+
       results = @mailchimp_cached.reports_member_activity(:cid => cid, :emails => email)['data']
 
       results.each do |result|
@@ -182,9 +229,13 @@ command :reports do |c|
     s.flag :start, :default_value => 0
     s.flag :limit, :default_value => 50
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
       opts = {:start => options['start'], :limit => options['limit']}
+
       @output.standard @mailchimp_cached.reports_not_opened(:cid => cid, :opts => opts)['data'], :fields => [:email]
     end
   end
@@ -199,8 +250,11 @@ command :reports do |c|
     s.flag 'sort-field', :default_value => "opened"
     s.flag 'sort-dir', :default_value => "asc"
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
       opts = {:start => options['start'], :limit => options['limit'], :sort_field => options['sort-field'], :sort_dir => options['sort-dir']}
       member_column = lambda{|l| "#{l['member']['email']}"}
 
@@ -217,10 +271,14 @@ command :reports do |c|
     s.flag :start, :default_value => 0
     s.flag :limit, :default_value => 50
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
       opts = {:status => options['status'], :start => options['start'], :limit => options['limit']}
       member_column = lambda{|l| "#{l['member']['email']}"}
+
       @output.standard @mailchimp_cached.reports_sent_to(:cid => cid, :opts => opts)['data'], :fields => [:member => {:display_method => member_column}]
     end
   end
@@ -231,8 +289,11 @@ command :reports do |c|
     s.arg_name 'campaign id'
     s.flag :cid
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
 
       results = @mailchimp_cached.reports_share(:cid => cid)
       if global[:output]
@@ -253,9 +314,13 @@ command :reports do |c|
     s.desc 'Campaign ID'
     s.flag :cid
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
       ap options
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
+
       @output.as_hash @mailchimp_cached.reports_summary(:cid => cid)
     end
   end
@@ -268,9 +333,13 @@ command :reports do |c|
     s.flag :start, :default_value => 0
     s.flag :limit, :default_value => 50
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
       opts = {:start => options['start'], :limit => options['limit']}
+
       @output.standard @mailchimp_cached.reports_unsubscribes(:cid => cid, :opts => opts)['data'], :fields => [:email]
     end
   end

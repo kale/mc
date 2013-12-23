@@ -19,8 +19,9 @@ module Helper
     exit_now!(msg)
   end
 
-  def get_last_campaign_id
-    @mailchimp_cached.campaigns_list(:limit => 1, :sort_field => "create_time")["data"].first["id"]
+  def get_last_campaign_id(really=false)
+    #do we really want to use the last campaign id?
+    really ? @mailchimp_cached.campaigns_list(:limit => 1, :sort_field => "create_time")["data"].first["id"] : nil
   end
 
   def create_email_struct(emails)

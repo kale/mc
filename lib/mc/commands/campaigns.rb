@@ -178,8 +178,12 @@ command :campaigns do |c|
     s.desc 'Campaign ID'
     s.flag :cid
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
+      puts cid
 
       @output.standard @mailchimp_cached.campaigns_ready(:cid=> cid)
     end

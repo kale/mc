@@ -53,8 +53,11 @@ command :export do |c|
     c.desc 'Export all subscribers even if they have no activity'
     c.switch :include_empty, :negatable => false
 
+    s.desc 'Use last created campaign id'
+    s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
+
     s.action do |global,options,args|
-      cid = options[:cid] || get_last_campaign_id
+      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
 
       @mailchimp.export_campaign_subscriber_activity(:id => cid).each do |activity|
         puts activity
