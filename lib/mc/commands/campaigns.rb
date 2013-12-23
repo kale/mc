@@ -1,5 +1,28 @@
 desc 'Campaign related tasks'
 command :campaigns do |c|
+  c.desc 'Get the content (both html and text) for a campaign either as it would appear in the campaign archive or as the raw, original content'
+  c.command :content do |s|
+    s.desc 'Select view type - [archive], preview, or raw'
+    s.flag :view
+
+    s.desc 'Select the format - [html, text]'
+    s.flag :output
+    s.action do |global,options,args|
+      cid = required_argument("Need to supply a campaign id", args.first)
+      view = required_option(:view, options[:view], "archive")
+      email = ""
+
+      results = @mailchimp_cached.campaigns_content(:cid => cid, :options => {:view => view, :email => email})
+
+      if options[:output] == 'html'
+        puts results['html']
+      elsif options[:output] == 'text'
+        puts results['text']
+      else
+        @output.as_hash results
+      end
+    end
+  end
 
   c.desc 'Create Campaign'
   c.command :create do |s|
