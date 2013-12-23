@@ -185,6 +185,56 @@ command :campaigns do |c|
     end
   end
 
+  c.desc 'Replicate a campaign.'
+  c.command :replicate do |s|
+    s.desc 'Campaign ID'
+    s.flag :cid
+
+    s.action do |global,options,args|
+      cid = required_argument("Need to supply a campaign id", args.first)
+
+      @output.as_hash @mailchimp_cached.campaigns_replicate(:cid=> cid)
+    end
+  end
+
+  c.desc 'Resume sending an AutoResponder or RSS campaign'
+  c.command :resume do |s|
+    s.desc 'Campaign ID'
+    s.flag :cid
+
+    s.action do |global,options,args|
+      cid = required_argument("Need to supply a campaign id", args.first)
+
+      @output.as_raw @mailchimp_cached.campaigns_resume(:cid=> cid)
+    end
+  end
+
+  c.desc 'Schedule a campaign to be sent in batches sometime in the future'
+  c.command 'schedule-batch' do |s|
+    s.desc 'Campaign ID'
+    s.flag :cid
+
+    s.desc 'Date to schedule campaign in YYYY-MM-DD format'
+    s.flag :date
+
+    s.desc 'Time to schedule campaign at in HH:MM:SS format'
+    s.flag :time
+
+    s.desc 'Number of batches to send (2 - 26)'
+    s.flag :batches, :default_value => 2
+
+    s.desc 'Number of minutes between each batch (5, 10, 15, 20, 25, 30, 60)'
+    s.flag :stagger, :default_value => 5
+
+    s.action do |global,options,args|
+      cid = required_argument("Need to supply a campaign id", options[:cid])
+      date = required_option(:date, options[:date])
+      time = required_option(:time, options[:time])
+
+      puts @mailchimp.campaigns_schedule(:cid => cid, :schedule_time => date + ' ' + time, :num_batches => options[:batches], :stagger_mins => options[:stagger])
+    end
+  end
+
   c.desc 'Schedule Campaign'
   c.command :schedule do |s|
     s.desc 'Campaign ID'
@@ -250,6 +300,50 @@ command :campaigns do |c|
 
       print "Sending test for campaign #{cid}... "
       @mailchimp.campaigns_send_test(:cid=> cid, :test_emails => emails)["complete"] ? puts("done!") : puts("ut oh, no can do!")
+    end
+  end
+
+  c.desc 'Unschedule a campaign that is scheduled to be sent in the future'
+  c.command :unschedule do |s|
+    s.desc 'Campaign ID'
+    s.flag :cid
+
+    s.action do |global,options,args|
+      cid = required_argument("Need to supply a campaign id", args.first)
+
+      @output.as_raw @mailchimp_cached.campaigns_unschedule(:cid=> cid)
+    end
+  end
+
+  c.desc 'Get the HTML template content sections for a campaign'
+  c.command 'template-content' do |s|
+    s.desc 'Campaign ID'
+    s.flag :cid
+
+    s.action do |global,options,args|
+      cid = required_argument("Need to supply a campaign id", args.first)
+
+      @output.as_hash @mailchimp_cached.campaigns_template_content(:cid=> cid)
+    end
+  end
+
+  c.desc 'Update just about any setting besides type for a campaign that has not been sent'
+  c.command :update do |s|
+    s.desc 'Campaign ID'
+    s.flag :cid
+
+    s.desc 'Parameter name to change'
+    s.flag :name
+
+    s.desc 'Value to set parameter to'
+    s.flag :value
+
+    s.action do |global,options,args|
+      cid = required_argument("Need to supply a campaign id", args.first)
+      name = required_option(:name, options[:name])
+      value = required_option(:value, options[:value])
+
+      @output.as_hash @mailchimp.campaigns_update(:cid=> cid, :name => name, :value => value)
     end
   end
 end
