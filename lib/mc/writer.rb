@@ -130,32 +130,56 @@ class ConsoleWriter
     end
   end
 
-  def member_search(results)
-    redirect_output?(results)
+  def member_search(exact, full, options=nil)
+    redirect_output?(full, options)
 
-    if results['exact_matches']['total'].to_i == 0 and results['full_search']['total'].to_i == 0
+    if exact.count == 0 and full.count == 0
       exit_now!("No matches found.")
     end
 
     members = []
 
-    if results['exact_matches']['total'].to_i > 0
-      puts "#{'='*20} Exact Matches (#{results['exact_matches']['total']}) #{'='*20}"
+    if exact.count > 0
+      puts "#{'='*20} Exact Matches (#{exact.count}) #{'='*20}"
 
-      results['exact_matches']['members'].each do |member|
+      exact.each do |member|
         members << member
       end
-    elsif results['full_search']['total'].to_i > 0
-      puts "#{'='*26} Matches (#{results['full_search']['total']}) #{'='*26}"
-      results['full_search']['members'].each do |member|
+
+      tp members, :email, :id, :list_name, :member_rating, :status, "VIP?" => {:display_method => :is_gmonkey}
+    elsif full.count > 0
+      max_email = 0
+      max_name = 0
+
+      full.each do |member|
         members << member
+        max_email = find_max(member['email'].size, max_email)
+        max_name  = find_max(member['list_name'].size, max_name)
+      end
+
+      #display the table header
+      header = "#{pad('EMAIL', max_email, 40)} | ID         | #{pad('LIST NAME', max_name, 20)} | MEMBER RATING | #{pad('STATUS', 12)} | VIP?"
+      puts "#{'='*(header.size/2 - 7)} Matches (#{full.count}) #{'='*(header.size/2 - 7)}"
+      header += "\n#{'-'*header.size}"
+      puts header
+
+      #display member rows
+      members.each do |m|
+        puts "#{pad(m['email'], max_email, 40)} | #{m['id']} | #{pad(m['list_name'], max_name, 20)} | #{pad(m['member_rating'], 13)} | #{pad(m['status'], 12)} | #{m['is_gmonkey']}"
       end
     end
-
-    tp members, :email, :id, :list_name, :member_rating, :status, "VIP?" => {:display_method => :is_gmonkey}
   end
 
   private
+
+  def pad(value, padding, max_length=25)
+    value = value.to_s
+    "#{value[0..max_length]}#{' '*(padding - value[0..max_length].size)}"
+  end
+
+  def find_max(a, b)
+    a > b ? a : b
+  end
 
   def debug(results)
     puts "#{'*'*50}"
