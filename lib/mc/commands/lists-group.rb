@@ -1,3 +1,4 @@
+desc 'View information about lists and subscribers'
 command :lists do |lists|
   lists.desc 'Manage groups'
   lists.command :group do |c|
