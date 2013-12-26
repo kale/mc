@@ -1,4 +1,4 @@
-desc 'Users'
+desc 'Manage and invite MailChimp user accounts'
 command :users do |c|
   # users/invite (string apikey, string email, string role, string msg)
   c.desc 'Invite a user to your account'

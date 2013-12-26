@@ -1,5 +1,5 @@
-desc 'VIPs'
-command :vip do |c|
+desc 'Check activity and add/remove/list members'
+command :vips do |c|
   # vip/activity (string apikey)
   c.desc 'Show all Activity (opens/clicks) for VIPs over the past 10 days'
   c.command :activity do |s|

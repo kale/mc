@@ -1,4 +1,4 @@
-desc 'Reports'
+desc 'View various campaign level reporting'
 command :reports do |c|
   # reports/abuse (string apikey, string cid, struct opts)
   c.desc 'Get all email addresses that complained about a given campaign'
