@@ -1,18 +1,19 @@
-desc 'Export'
+desc 'Export list, ecomm, or activity streams (no caching)'
+long_desc 'Uses the Export API and will stream results. These commands do not do any caching, and thus you should be careful about running these multiple times. A typical way to use this command would be to redirect output to a file. Example: mc export activity --cid 1234567 > campaign_activity.txt'
 command :export do |c|
   # list ( string apikey, string id, string status array segment, string since )
   c.desc 'Exports/dumps members of a list and all of their associated details.'
   c.command :list do |s|
-    c.desc 'List ID'
-    c.flag :id
+    s.desc 'List ID'
+    s.flag :id
 
-    c.flag :status
+    s.flag :status
 
-    c.desc "Use either 'any' or 'all'"
-    c.flag :match, :default_value => 'all'
+    s.desc "Use either 'any' or 'all'"
+    s.flag :match, :default_value => 'all'
 
-    c.desc 'Condition in the format field,op,value'
-    c.flag :condition
+    s.desc 'Condition in the format field,op,value'
+    s.flag :condition
 
     s.action do |global,options,args|
       id = required_option(:id, options[:id], global[:list])
@@ -35,8 +36,8 @@ command :export do |c|
   # ecommOrders ( string since )
   c.desc 'Dumps all Ecommerce Orders for an account'
   c.command :ecommm do |s|
-    c.desc 'Ecomm orders since a specific date'
-    c.flag :since
+    s.desc 'Ecomm orders since a specific date'
+    s.flag :since
 
     s.action do |global,options,args|
       @mailchimp.export_ecomm_orders.each do |order|
@@ -46,12 +47,13 @@ command :export do |c|
   end
 
   # campaignSubscriberActivity ( string apikey, string id, boolean include_empty, string since )
+  c.desc 'Dumps all Subscriber Activity for the requested campaign'
   c.command :activity do |s|
-    c.desc 'Campaign ID'
-    c.flag :cid
+    s.desc 'Campaign ID'
+    s.flag :cid
 
-    c.desc 'Export all subscribers even if they have no activity'
-    c.switch :include_empty, :negatable => false
+    s.desc 'Export all subscribers even if they have no activity'
+    s.switch :include_empty, :negatable => false
 
     s.desc 'Use last created campaign id'
     s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
