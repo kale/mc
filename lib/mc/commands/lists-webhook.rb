@@ -8,9 +8,10 @@ command :lists do |lists|
       s.flag :id
 
       s.action do |global,options,args|
-        s.flag :url
-        id = required_argument(:id, options[:id], global[:list])
-        @output.standard @mailchimp.lists_webhook_add(:id => id, :url => options[:url])
+        id = required_option(:id, options[:id], global[:list])
+        url = required_argument("Need a url", args.first)
+
+        @output.standard @mailchimp.lists_webhook_add(:id => id, :url => url)
       end
     end
 
@@ -21,9 +22,10 @@ command :lists do |lists|
       s.flag :id
 
       s.action do |global,options,args|
-        s.flag :url
         id = required_argument(:id, options[:id], global[:list])
-        @output.standard @mailchimp.lists_webhook_del(:id => id, :url => options[:url])
+        url = required_argument("Need a url", args.first)
+
+        @output.standard @mailchimp.lists_webhook_del(:id => id, :url => url)
       end
     end
 

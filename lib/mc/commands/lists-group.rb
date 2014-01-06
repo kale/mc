@@ -27,7 +27,7 @@ command :lists do |lists|
       s.action do |global,options,args|
         id = required_argument(:id, options[:id], global[:list])
         group_name = required_argument("Need to provide a group name.", args).first
-        @output.standard @mailchimp.lists_interest_group_delete(:id => id, :group_name => group_name, :grouping_id => options['grouping-id'])
+        @output.standard @mailchimp.lists_interest_group_del(:id => id, :group_name => group_name, :grouping_id => options['grouping-id'])
       end
     end
 
@@ -42,7 +42,9 @@ command :lists do |lists|
 
       s.action do |global,options,args|
         id = required_argument(:id, options[:id], global[:list])
-        @output.standard @mailchimp.lists_interest_group_delete(:id => id, :old_name => options[:old], :new_name => options[:new], :grouping_id => options['grouping-id'])
+        old = required_option(:old, options[:old])
+        new = required_option(:new, options[:new])
+        @output.standard @mailchimp.lists_interest_group_update(:id => id, :old_name => old, :new_name => new, :grouping_id => options['grouping-id'])
       end
     end
   end
@@ -58,20 +60,16 @@ command :lists do |lists|
 
       s.action do |global,options,args|
         id = required_argument(:id, options[:id], global[:list])
-        @output.standard @mailchimp_cached.lists_grouping_add(:id => id, :name => options[:name], :type => options[:type])
+        @output.standard @mailchimp.lists_interest_grouping_add(:id => id, :name => options[:name], :type => options[:type])
       end
     end
 
     # lists/interest-grouping-del (string apikey, int grouping_id)
     c.desc 'Delete an existing Interest Grouping'
     c.command :delete do |s|
-      s.desc 'list id'
-      s.flag :id
-
       s.action do |global,options,args|
-        id = required_argument(:id, options[:id], global[:list])
-        emails = create_email_struct(required_argument("Need to provide one or more email addresses.", args))
-        @output.standard @mailchimp_cached.lists_
+        grouping_id = required_argument("Must provide the grouping id", args.first)
+        @output.standard @mailchimp.lists_interest_grouping_del(:grouping_id => grouping_id)
       end
     end
 
@@ -84,7 +82,7 @@ command :lists do |lists|
 
       s.action do |global,options,args|
         id = required_argument(:id, options[:id], global[:list])
-        @output.standard @mailchimp_cached.lists_interest_grouping_update(:grouping_id => options[:grouping_id], :name => options[:name], :value => options[:value])
+        @output.standard @mailchimp.lists_interest_grouping_update(:grouping_id => options[:grouping_id], :name => options[:name], :value => options[:value])
       end
     end
 
@@ -97,7 +95,7 @@ command :lists do |lists|
 
       s.action do |global,options,args|
         id = required_argument(:id, options[:id], global[:list])
-        @output.standard @mailchimp_cached.lists_interest_groupings(:id => id, :counts => options[:counts])
+        @output.as_hash @mailchimp_cached.lists_interest_groupings(:id => id, :counts => options[:counts])
       end
     end
 
