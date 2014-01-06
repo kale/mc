@@ -159,16 +159,24 @@ command :campaigns do |c|
 
   c.desc 'Get the list of campaigns and their details matching the specified filters'
   c.command :list do |s|
-    s.switch :first
-    s.flag :start, :default_value => 0
-    s.flag :limit, :default_value => 50
-    s.flag :sort_field, :default_value => 'create_time'
-    s.flag :sort_dir, :default_value => 'DESC'
-
+    s.desc 'List ID'
+    s.flag :list
+    s.desc "Return campaigns of a specific status - 'sent', 'saved', 'paused', 'schedule', 'sending'"
     s.flag :status
+    s.desc "Return campaigns of a specific type - 'regular', 'plaintext', 'absplit', 'rss', 'auto'"
     s.flag :type
+    s.desc 'Number of campaigns to display'
+    s.flag :limit, :default_value => 50
+
+    # s.switch :first
+    # s.flag :start, :default_value => 0
+    # s.flag :sort_field, :default_value => 'create_time'
+    # s.flag :sort_dir, :default_value => 'DESC'
+
     s.action do |global,options,args|
-      results = @mailchimp.campaigns_list(:limit => options[:limit], :filters => {:status => options[:status], :type => options[:type]})
+      #by design not including global[:list], although that goes against norm. however,
+      #seems to not fit well with this command and not possible to negate it
+      results = @mailchimp_cached.campaigns_list(:limit => options[:limit], :filters => {:list_id => options[:list], :status => options[:status], :type => options[:type]})
       @output.standard results['data'], :fields => [:id, :title, :status, :send_time, :emails_sent, :archive_url]
     end
   end
