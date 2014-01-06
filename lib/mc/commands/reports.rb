@@ -340,7 +340,7 @@ command :reports do |c|
       opts = {:start => options['start'], :limit => options['limit']}
 
       member_column = lambda{|l| "#{l['member']['email']}"}
-      @output.standard @mailchimp_cached.reports_unsubscribes(:cid => cid, :opts => opts)['data'], :fields => [:reason, :reason_text, :member => {:display_method => member_column}]
+      @output.standard @mailchimp_cached.reports_unsubscribes(:cid => cid, :opts => opts)['data'], :fields => [:reason, :reason_text, {:member => {:display_method => member_column}}]
     end
   end
 end
