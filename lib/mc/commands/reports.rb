@@ -318,7 +318,6 @@ command :reports do |c|
     s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
 
     s.action do |global,options,args|
-      ap options
       cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
 
       @output.as_hash @mailchimp_cached.reports_summary(:cid => cid)
@@ -340,7 +339,8 @@ command :reports do |c|
       cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
       opts = {:start => options['start'], :limit => options['limit']}
 
-      @output.standard @mailchimp_cached.reports_unsubscribes(:cid => cid, :opts => opts)['data'], :fields => [:email]
+      member_column = lambda{|l| "#{l['member']['email']}"}
+      @output.standard @mailchimp_cached.reports_unsubscribes(:cid => cid, :opts => opts)['data'], :fields => [:reason, :reason_text, :member => {:display_method => member_column}]
     end
   end
 end
