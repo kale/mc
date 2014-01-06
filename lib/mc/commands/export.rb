@@ -4,9 +4,6 @@ command :export do |c|
   # list ( string apikey, string id, string status array segment, string since )
   c.desc 'Exports/dumps members of a list and all of their associated details.'
   c.command :list do |s|
-    s.desc 'List ID'
-    s.flag :id
-
     s.flag :status
 
     s.desc "Use either 'any' or 'all'"
@@ -16,7 +13,7 @@ command :export do |c|
     s.flag :condition
 
     s.action do |global,options,args|
-      id = required_option(:id, options[:id], global[:list])
+      id = required_argument(:id, args.first, global[:list])
 
       if options[:condition]
         segment = {}
@@ -49,9 +46,6 @@ command :export do |c|
   # campaignSubscriberActivity ( string apikey, string id, boolean include_empty, string since )
   c.desc 'Dumps all Subscriber Activity for the requested campaign'
   c.command :activity do |s|
-    s.desc 'Campaign ID'
-    s.flag :cid
-
     s.desc 'Export all subscribers even if they have no activity'
     s.switch :include_empty, :negatable => false
 
@@ -59,7 +53,7 @@ command :export do |c|
     s.switch [:lcid, 'use-last-campaign-id'], :negatable => false
 
     s.action do |global,options,args|
-      cid = required_option(:cid, options[:cid], get_last_campaign_id(options[:lcid]))
+      cid = required_argument("Missing or invalid campaign id", args.first, get_last_campaign_id(options[:lcid]))
 
       @mailchimp.export_campaign_subscriber_activity(:id => cid).each do |activity|
         puts activity
