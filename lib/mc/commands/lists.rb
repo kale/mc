@@ -143,7 +143,7 @@ command :lists do |c|
 
       id = required_argument(:id, options[:id], global[:list])
       emails = create_email_struct(required_argument("Need to provide one or more email addresses.", args))
-      @output.as_hash @mailchimp.lists_subscribe(:id => id, :email => emails.first, :merge_vars => {:groupings => [{:id => 4493, :groups => ['Group1']}]})
+      @output.as_hash @mailchimp.lists_subscribe(:id => id, :email => emails.first)
     end
   end
 
