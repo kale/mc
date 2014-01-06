@@ -40,17 +40,17 @@ You should see something similar to:
     COMMANDS
       campaigns  - Campaign related tasks
       ecomm      - Ecomm related actions
-      export     - Export
+      export     - Export list, ecomm, or activity streams (no caching)
       gallery    - Manage images and documents that are in your account
       help       - Shows a list of commands or help for one command
       helper     - Basic admin funtions
       initconfig - Initialize the config file using current global options
       lists      - View information about lists and subscribers
-      reports    - Reports
+      reports    - View various campaign level reporting
       search     - Search campaigns and members
       templates  - Manage templates within your account
-      users      - Users
-      vip        - VIPs
+      users      - Manage and invite MailChimp user accounts
+      vips       - Check activity and add/remove/list members
 
 
 You can get details on specific subcommands by:
