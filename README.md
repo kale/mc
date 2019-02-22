@@ -76,7 +76,7 @@ You can then edit that file and include any defaults you want to set. I would hi
 	:apikey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-usx
 	:list: xxxxxxxxxx
 
-> Note: once you get your api key you can get the list id by running 'mc list lists'.
+> Note: once you get your api key you can get the list id by running 'mc lists list'.
 
 ## Todo
 * Finish supporting all api calls
